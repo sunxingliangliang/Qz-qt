@@ -67,7 +67,9 @@ export default {
   },
   methods: {
     getList () {
-      this.$http.get(`pc/fixedPortrait/selectAppinfo?taskId=${this.id}`).then(res => {
+      this.$http.get(`pc/fixedPortrait/selectAppinfo`,{params:{
+        taskid:this.id
+      }}).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.tableData1 = data

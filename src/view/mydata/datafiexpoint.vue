@@ -392,25 +392,53 @@ export default {
           data.decice.deviceList.forEach(item => {
             let lat = item.lat
             let lng = item.lng
-            this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lat},${lng}&output=json&pois=1 `).then(res => {
-              // console.log(res.result.formatted_address)
-              this.formatted_address = res.result.formatted_address
-              this.Grouping = {
-                groupName: item.groupName,
-                code: item.code,
-                isTime: item.isTime,
-                isNet: item.isNet,
-                lat: lat,
-                lng: lng,
-                dataNum: item.dataNum,
-                addressname: this.formatted_address
-              }
-              this.tableData.push(this.Grouping)
-            }).catch((err) => {
-              console.log('错误信息' + err)
-            })
+           if(lng!==null){
+              this.$jsonp(`http://api.map.baidu.com/geoconv/v1/?coords=${lng},${lat}&from=1&to=5&ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS`).then(res => {
+                console.log(res.result[0])
+                let reslat = res.result[0].y
+                let reslng = res.result[0].x
+                this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${reslat},${reslng}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                   this.formatted_address = res.result.formatted_address
+              this.Grouping = {
+                groupName: item.groupName,
+                code: item.code,
+                isTime: item.isTime,
+                isNet: item.isNet,
+                lat:reslat,
+                lng:reslng,
+                dataNum: item.dataNum,
+                addressname: this.formatted_address
+              }
+              this.tableData.push(this.Grouping)
+
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+              }).catch(err => {
+                console.log('错误信息' + err)
+              })
+            }else{
+             this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lng},${lat}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                  this.formatted_address = res.result.formatted_address
+              this.Grouping = {
+                groupName: item.groupName,
+                code: item.code,
+                isTime: item.isTime,
+                isNet: item.isNet,
+                lat: lat,
+                lng: lng,
+                dataNum: item.dataNum,
+                addressname: this.formatted_address
+              }
+              this.tableData.push(this.Grouping)
+
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+            }
           })
-          // console.log(this.tableData)
           if (this.create_time != undefined) {
             this.active = 1
           }
@@ -431,6 +459,7 @@ export default {
       }).catch((err) => {
         console.log('错误信息' + err)
       })
+
     },
     terminal () {
       if (this.selectedOptions.length === 1) {

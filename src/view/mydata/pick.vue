@@ -11,14 +11,14 @@
       <el-card shadow="always" :class="$style.f_kp">
         <p :class="$style.f_p">已结束</p>
         <p :class="$style.f_num1">{{num1}}</p>
-        <el-progress :percentage="num6" class="f_jd4" :format="format"></el-progress>
+        <el-progress :percentage="num6" class="f_jd1" :format="format"></el-progress>
       </el-card>
     </div>
     <div :class="$style.f_s6">
       <el-card shadow="always" :class="$style.f_kp">
         <p :class="$style.f_p">未结束</p>
         <p :class="$style.f_num2">{{num2}}</p>
-        <el-progress :percentage="num7" class="f_jd1" :format="format"></el-progress>
+        <el-progress :percentage="num7" class="f_jd2" :format="format"></el-progress>
       </el-card>
     </div>
     <div :class="$style.f_s6">
@@ -55,7 +55,7 @@
           :class="$style.f_chaxun"
           plain
           @click="shujutongji"
-          style="float:right;margin-top:10px;margin-right:20px;width: 82px;height: 37px;padding:0;"
+          style="float:right;margin-top:10px;margin-right:20px;"
         >数据统计</el-button>
       </div>
     </div>
@@ -65,7 +65,7 @@
       <div
         :class="$style.f_btn"
         @click="cjrw"
-        style="float: right; vertical-align: top; margin: 30px 0; margin-right: 24px; margin-bottom: 10px;"
+        style="float: right; vertical-align: top; margin: 30px 0; margin-right: 26px; margin-bottom: 10px;"
       >创建任务</div>
       <div :class="$style.f_row">
         <div :class="{'f_fy':xz,'f_fy1':xz1}" @click="qb">全部</div>
@@ -635,7 +635,7 @@
         </el-table>
       </div>
       <!-- 分页 -->
-      <div style="text-align: right;margin-top:21px;padding-bottom: 20px;padding-right:10px;">
+      <div style="text-align: right;margin-top:20px;padding-bottom: 20px;padding-right:10px;">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -694,9 +694,13 @@
           <div :class="$style.f_sjbg">
             <el-table :data="tableDataaspect" border style="width: 100%">
               <el-table-column type="index" align="center" label="序号" width="50"></el-table-column>
-              <el-table-column prop="mac" align="center" label="MAC地址"></el-table-column>
+              <el-table-column prop="mac" align="center" label="数据" width="150"></el-table-column>
               <el-table-column prop="gather_time" align="center" label="采集时间"></el-table-column>
-              <el-table-column prop="scences_name" align="center" label="场景名称"></el-table-column>
+              <el-table-column align="center" label="经纬度">
+                <template slot-scope="scope">
+                  <span>{{scope.row.lat}}/{{scope.row.lng}}</span>
+                </template>
+              </el-table-column>
               <el-table-column prop="device_code" align="center" label="终端编号"></el-table-column>
             </el-table>
           </div>
@@ -724,7 +728,7 @@
         <p :class="$style.f_jb">基本信息</p>
         <el-row :class="$style.f_hxrow">
           <span :class="$style.f_ddname">订单名称:</span>
-          <el-input placeholder="请输入内容" v-model="ordername" :class="$style.f_hxinpt" clearable style="width: calc(100% - 17%)"></el-input>
+          <el-input placeholder="请输入内容" v-model="ordername" :class="$style.f_hxinpt" clearable></el-input>
         </el-row>
         <p :class="$style.f_sjxx">数据信息</p>
         <el-row :class="$style.f_hxrow">
@@ -772,7 +776,7 @@
             clearable
           ></el-input>
         </div>
-        <!-- <div :class="$style.f_hxrow">
+        <div :class="$style.f_hxrow">
           <div style="line-height: 40px;margin-right: 1%;display: inline-block;">
             <span :class="$style.f_ddname">数据范围:</span>
           </div>
@@ -843,7 +847,7 @@
               ></el-option>
             </el-select>
           </div>
-        </div> -->
+        </div>
         <div :class="$style.f_hxrow">
           <span :class="$style.f_ddname">订购金额：</span>
           <span :class="$style.f_ddname" v-if="dgmoney!=null">{{dgmoney}}</span>
@@ -1173,17 +1177,11 @@ export default {
             item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
             // item.cj = item.collectList[0].scencesName
-            console.log(item.collectList)
-            if(item.collectList!==undefined){
-              console.log('123')
+            if (item.collectList[0] === undefined) {
+            } else {
+              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
             }
-            // if (item.collectList[0] === undefined) {
-            // } else {
-            //   // console.log(item.collectList[0])
-            // }
           })
         } else if (code == 2001) {
           this.$message.error(res.data.message);
@@ -1230,11 +1228,11 @@ export default {
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
             // item.cj = item.collectList[0].scencesName
             // this.tableData1 = item.collectList
-            if(item.collectList!==undefined){
-              console.log('123')
+            if (item.collectList[0] === undefined) {
+              console.log(1)
+            } else {
+              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
             }
           })
           console.log(this.tableData)
@@ -1275,11 +1273,11 @@ export default {
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
             // item.cj = item.collectList[0].scencesName
             // this.tableData1 = item.collectList
-            if(item.collectList!==undefined){
-              console.log('123')
+            if (item.collectList[0] === undefined) {
+              console.log(1)
+            } else {
+              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
             }
           })
           console.log(this.tableData)
@@ -1320,11 +1318,11 @@ export default {
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
             // item.cj = item.collectList[0].scencesName
             // this.tableData1 = item.collectList
-            if(item.collectList!==undefined){
-              console.log('123')
+            if (item.collectList[0] === undefined) {
+              console.log(1)
+            } else {
+              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
             }
           })
           console.log(this.tableData)
@@ -1365,11 +1363,11 @@ export default {
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
             // item.cj = item.collectList[0].scencesName
             // this.tableData1 = item.collectList
-            if(item.collectList!==undefined){
-              console.log('123')
+            if (item.collectList[0] === undefined) {
+              console.log(1)
+            } else {
+              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
             }
           })
           console.log(this.tableData)
@@ -1402,12 +1400,12 @@ export default {
               item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
               item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
               // item.cj = item.collectList[0].scencesName
-            if(item.collectList!==undefined){
-              console.log('123')
-              item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
-            }
+              if (item.collectList[0] === undefined) {
+                console.log(1)
+              } else {
+                // console.log(item.collectList[0])
+                item.cj = item.collectList[0].scencesName
+              }
             })
           } else if (code == 2001) {
             this.$message.error(res.data.message);
@@ -1435,12 +1433,12 @@ export default {
               item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
               item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
               // item.cj = item.collectList[0].scencesName
-            if(item.collectList!==undefined){
-              console.log('123')
-              item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
-            }
+              if (item.collectList[0] === undefined) {
+                console.log(1)
+              } else {
+                // console.log(item.collectList[0])
+                item.cj = item.collectList[0].scencesName
+              }
             })
           } else if (code == 2001) {
             this.$message.error(res.data.message);
@@ -1468,12 +1466,12 @@ export default {
               item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
               item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
               // item.cj = item.collectList[0].scencesName
-            if(item.collectList!==undefined){
-              console.log('123')
-              item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
-            }
+              if (item.collectList[0] === undefined) {
+                console.log(1)
+              } else {
+                // console.log(item.collectList[0])
+                item.cj = item.collectList[0].scencesName
+              }
             })
           } else if (code == 2001) {
             this.$message.error(res.data.message);
@@ -1501,12 +1499,12 @@ export default {
               item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
               item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
               // item.cj = item.collectList[0].scencesName
-            if(item.collectList!==undefined){
-              console.log('123')
-              item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
-            }
+              if (item.collectList[0] === undefined) {
+                console.log(1)
+              } else {
+                // console.log(item.collectList[0])
+                item.cj = item.collectList[0].scencesName
+              }
             })
           } else if (code == 2001) {
             this.$message.error(res.data.message);
@@ -1534,12 +1532,12 @@ export default {
               item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
               item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
               // item.cj = item.collectList[0].scencesName
-            if(item.collectList!==undefined){
-              console.log('123')
-              item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
-            }
+              if (item.collectList[0] === undefined) {
+                console.log(1)
+              } else {
+                // console.log(item.collectList[0])
+                item.cj = item.collectList[0].scencesName
+              }
             })
           } else if (code == 2001) {
             this.$message.error(res.data.message);
@@ -1582,11 +1580,11 @@ export default {
             item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
             // item.cj = item.collectList[0].scencesName
-            if(item.collectList!==undefined){
-              console.log('123')
+            if (item.collectList[0] === undefined) {
+              console.log(1)
+            } else {
+              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
             }
           })
         } else if (code == 2001) {
@@ -1615,11 +1613,12 @@ export default {
             item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
             // item.cj = item.collectList[0].scencesName
-            if(item.collectList!==undefined){
-              console.log('123')
+            console.log(item.collectList)
+            if (item.collectList[0] === undefined) {
+              console.log(1)
+            } else if (item.collectList[0] != undefined) {
+              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
-            }else{
-              console.log('ABC')
             }
           })
         } else if (code == 2001) {
@@ -1639,36 +1638,32 @@ export default {
       console.log(this.searchId)
       let ids = this.searchId.join(',')
       console.log(ids)
-      if (ids === '') {
-        this.$message.error('请选择采集任务')
-      } else {
-        let info = {
-          'ids': ids,
-          'type': 2
-        }
-        this.$http.post(`pc/task/orderInit`, info).then(res => {
-          var { code, data } = res.data
-          if (code === 1000) {
-            console.log(data)
-            this.ordername = data.name
-            this.moeny = data.personaPrice
-            this.ysjl = data.dataCount
-          } else if (code == 2001) {
-            this.$message.error(res.data.message);
-            window.sessionStorage.clear();
-            window.localStorage.clear();
-            this.$router.push('/')
-          } else {
-            this.$message.error(res.data.message);
-          }
-        }).catch((err) => {
-          console.log('错误信息' + err)
-        })
-        this.ikon = true
-      }
       // let info = new FormData()
       // info.append('ids', ids)
       // info.append('type', 2)
+      let info = {
+        'ids': ids,
+        'type': 2
+      }
+      this.$http.post(`pc/task/orderInit`, info).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          console.log(data)
+          this.ordername = data.name
+          this.moeny = data.personaPrice
+          this.ysjl = data.dataCount
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+      this.ikon = true
     },
     // 订购数据
     orderdata () {
@@ -1837,10 +1832,10 @@ export default {
       // console.log(row.id)
       this.taskId = row.id
       let endstr = ''
-      this.$http.get(`pc/data/list`, {        params: {
-          taskId: this.taskId,
-          size: 10
-        }      }).then(res => {
+      this.$http.get(`pc/data/list`,{params:{
+        taskId:this.taskId,
+        size:10
+      }}).then(res => {
         var { code, data } = res.data
         if (code == 1000) {
           this.tableDataaspect = data.content
@@ -1848,6 +1843,8 @@ export default {
           this.tableDataaspect.forEach(item => {
             let mac = item.mac
             var a = mac.split('')  //将a字符串转换成数组
+            a.splice(0, 1, '*')
+            a.splice(1, 1, '*')
             a.splice(2, 1, '*')
             a.splice(3, 1, '*')
             a.splice(4, 1, '*')
@@ -1875,9 +1872,9 @@ export default {
       }).catch((err) => {
         console.log('错误信息' + err)
       })
-      this.$http.get(`pc/task/scencesBytask`, {        params: {
-          taskId: this.taskId
-        }      }).then(res => {
+      this.$http.get(`pc/task/scencesBytask`,{params:{
+        taskId:this.taskId
+      }}).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.acquisitionscene = data
@@ -1910,10 +1907,10 @@ export default {
     },
     handleSizeChange1 (val) {
       this.sizes1 = val
-      this.$http.get(`pc/data/list`, {        params: {
-          taskId: this.taskId,
-          size: this.sizes1
-        }      }).then(res => {
+      this.$http.get(`pc/data/list`,{params:{
+        taskId:this.taskId,
+        size:this.sizes1
+      }}).then(res => {
         var { code, data } = res.data
         if (code == 1000) {
           this.tableDataaspect = data.content
@@ -1921,6 +1918,8 @@ export default {
           this.tableDataaspect.forEach(item => {
             let mac = item.mac
             var a = mac.split('')  //将a字符串转换成数组
+            a.splice(0, 1, '*')
+            a.splice(1, 1, '*')
             a.splice(2, 1, '*')
             a.splice(3, 1, '*')
             a.splice(4, 1, '*')
@@ -1951,11 +1950,11 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange1 (val) {
-      this.$http.get(`pc/data/list`, {        params: {
-          taskId: this.taskId,
-          size: this.sizes1,
-          page: val - 1
-        }      }).then(res => {
+      this.$http.get(`pc/data/list`,{params:{
+        taskId:this.taskId,
+        size:this.sizes1,
+        page:val-1
+      }}).then(res => {
         var { code, data } = res.data
         if (code == 1000) {
           this.tableDataaspect = data.content
@@ -1963,6 +1962,8 @@ export default {
           this.tableDataaspect.forEach(item => {
             let mac = item.mac
             var a = mac.split('')  //将a字符串转换成数组
+            a.splice(0, 1, '*')
+            a.splice(1, 1, '*')
             a.splice(2, 1, '*')
             a.splice(3, 1, '*')
             a.splice(4, 1, '*')
@@ -1995,12 +1996,12 @@ export default {
     scenes () {
       console.log(this.value3)
       console.log(this.value2)
-      this.$http.get(`pc/data/list`, {        params: {
-          taskId: this.taskId,
-          size: 10,
-          scencesId: this.value3,
-          deviceCode: this.value2
-        }      }).then(res => {
+      this.$http.get(`pc/data/list`,{params:{
+        taskId:this.taskId,
+        size:10,
+        scencesId:this.value3,
+        deviceCode:this.value2
+      }}).then(res => {
         var { code, data } = res.data
         if (code == 1000) {
           this.tableDataaspect = data.content
@@ -2008,6 +2009,8 @@ export default {
           this.tableDataaspect.forEach(item => {
             let mac = item.mac
             var a = mac.split('')  //将a字符串转换成数组
+            a.splice(0, 1, '*')
+            a.splice(1, 1, '*')
             a.splice(2, 1, '*')
             a.splice(3, 1, '*')
             a.splice(4, 1, '*')
@@ -2038,12 +2041,12 @@ export default {
     },
     ending () {
       console.log(this.value2)
-      this.$http.get(`pc/data/list`, {        params: {
-          taskId: this.taskId,
-          size: 10,
-          scencesId: this.value3,
-          deviceCode: this.value2
-        }      }).then(res => {
+      this.$http.get(`pc/data/list`,{params:{
+        taskId:this.taskId,
+        size:10,
+        scencesId:this.value3,
+        deviceCode:this.value2
+      }}).then(res => {
         var { code, data } = res.data
         if (code == 1000) {
           this.tableDataaspect = data.content
@@ -2051,6 +2054,8 @@ export default {
           this.tableDataaspect.forEach(item => {
             let mac = item.mac
             var a = mac.split('')  //将a字符串转换成数组
+            a.splice(0, 1, '*')
+            a.splice(1, 1, '*')
             a.splice(2, 1, '*')
             a.splice(3, 1, '*')
             a.splice(4, 1, '*')
@@ -2277,10 +2282,10 @@ export default {
       color: #3b7cff;
     }
     .f_num1 {
-      color: #9013fe;
+      color: #77c12b;
     }
     .f_num2 {
-      color: #77c12b;
+      color: #fb745b;
     }
     .f_num3 {
       color: #42e0fc;

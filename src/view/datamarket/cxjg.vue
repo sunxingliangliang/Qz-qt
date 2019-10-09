@@ -80,7 +80,7 @@
             ></el-option>
           </el-select>
         </div>
-        <div style="margin-left:20px;display: inline-block;">
+        <div style="margin-left:18px;display: inline-block;">
           <span>行业/区域</span>
           <el-cascader
             v-if="datastamp===''"
@@ -172,7 +172,7 @@
             ></el-option>
           </el-select>
         </div>
-        <div style="margin-left: 30px;display: inline-block;">
+        <div style="margin-left: 25px;display: inline-block;">
           <span>人群标签</span>
           <el-select
             v-model="biaoqian"
@@ -192,7 +192,7 @@
             ></el-option>
           </el-select>
         </div>
-        <div style="margin-left:20px;width:264px;display: inline-block;">
+        <div style="margin-left:20px;width:299px;display: inline-block;">
           <span>采集时间</span>
           <el-date-picker
             v-model="valuedate"
@@ -243,7 +243,7 @@
         </el-row>
         <el-row :class="$style.f_hxrow">
           <span :class="$style.f_ddname">订购金额：</span>
-          <span :class="$style.f_ddname">{{moeny}}</span>
+          <span :class="$style.f_ddname">{{moeny}}VKT</span>
         </el-row>
         <p :class="$style.f_sjxx">订单备注</p>
         <el-input
@@ -284,7 +284,7 @@
         </el-row>
         <el-row :class="$style.f_hxrow">
           <span :class="$style.f_ddname">订购金额：</span>
-          <span :class="$style.f_ddname" v-if="dgmoney!=null">{{dgmoney}}</span>
+          <span :class="$style.f_ddname" v-if="dgmoney!=null">{{dgmoney}}VKT</span>
         </el-row>
         <p :class="$style.f_jb" style="margin-top:20px;">媒体平台</p>
         <div style="margin-top:20px;">
@@ -1429,9 +1429,9 @@ export default {
         let info = {
           'name': this.formname,
           'buyAmount': this.buyAmount,
-          'searchId': this.searchId,
-          'ids': this.ids1,
-          'buyPrice': 233
+          'ids': this.ids,
+          'searchId':this.searchId,
+          'buyPrice': this.dgmoney,
         }
         this.$http.post(`pc/order/orderData`, info).then(res => {
           var { code, data } = res.data
@@ -1468,7 +1468,7 @@ export default {
           'searchId': this.searchId,
           'price': 232
         }
-        this.$http.post(`pc/order/orderPersona`).then(res => {
+        this.$http.post(`pc/order/orderPersona`,info).then(res => {
           var { code, data } = res.data
           if (code == 1000) {
             this.$message({

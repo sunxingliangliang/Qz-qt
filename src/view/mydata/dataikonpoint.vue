@@ -7,19 +7,19 @@
           <el-step
             title="提交订单"
             icon="iconfont icontijiao"
-            :description="row.timePoint.create_time"
+            :description="create_time"
             style="flex-basis: 30%; margin-right: 0px;"
           ></el-step>
           <el-step
             title="订单审批"
             icon="iconfont iconshenpi"
-            :description="row.timePoint.pass"
+            :description="pass"
             style="flex-basis: 30%; margin-right: 0px;"
           ></el-step>
           <el-step
             title="订单查看"
             icon="iconfont iconchakan"
-            :description="row.timePoint.end"
+            :description="end"
             style="flex-basis: 30%; margin-right: 0px;"
           ></el-step>
         </el-steps>
@@ -66,23 +66,23 @@
       </div>
       <p :class="$style.f_jb">数据信息</p>
       <div :class="$style.f_bgnr">
-        <el-table :data="tableData" border style="width: 100%;">
-          <el-table-column prop="dls" align="center" label="源数据量"></el-table-column>
-          <el-table-column prop="cjname" align="center" label="订购金额"></el-table-column>
+        <el-table :data="taskList" border style="width: 100%;">
+          <el-table-column prop="taskDataCount" align="center" label="源数据量"></el-table-column>
+          <el-table-column prop="taskDataCount" align="center" label="订购金额"></el-table-column>
         </el-table>
       </div>
       <p :class="$style.f_jb">数据来源</p>
       <div :class="$style.f_bgnr">
-        <el-table :data="tableData" border style="width: 100%;">
-          <el-table-column prop="dt" align="center" label="任务编号"></el-table-column>
-          <el-table-column prop="zjl" align="center" label="采集任务名称"></el-table-column>
-          <el-table-column prop="zsj" align="center" label="数据量"></el-table-column>
+        <el-table :data="taskList" border style="width: 100%;">
+          <el-table-column prop="taskCode" align="center" label="任务编号"></el-table-column>
+          <el-table-column prop="taskName" align="center" label="采集任务名称"></el-table-column>
+          <el-table-column prop="taskDataCount" align="center" label="数据量"></el-table-column>
         </el-table>
       </div>
       <div :class="$style.f_bgnr">
-        <el-table :data="tableData" border style="width: 100%;">
-          <el-table-column prop="dt" align="center" label="关键字"></el-table-column>
-          <el-table-column prop="zjl" align="center" label="数据量"></el-table-column>
+        <el-table :data="taskList" border style="width: 100%;">
+          <!-- <el-table-column prop="dt" align="center" label="关键字"></el-table-column> -->
+          <el-table-column prop="taskDataCount" align="center" label="数据量"></el-table-column>
         </el-table>
       </div>
       <p :class="$style.f_jb">操作信息</p>
@@ -125,38 +125,38 @@
     <div :class="$style.f_jz">
       <footerl/>
     </div>
-      <!-- 编辑 -->
-      <div class="f_dgsj">
-        <el-dialog title="订购数据" :visible.sync="sjxq" width="60%" :before-close="sjdata">
-          <p :class="$style.f_jb">基本信息</p>
-          <el-row :class="$style.f_hxrow">
-            <span :class="$style.f_ddname">订单名称:</span>
-            <el-input placeholder="请输入内容" v-model="input1" :class="$style.f_hxinpt" clearable></el-input>
-          </el-row>
-          <p :class="$style.f_sjxx">数据信息</p>
-          <el-row :class="$style.f_hxrow">
-            <span :class="$style.f_ddname">源数据量：</span>
-            <span :class="$style.f_ddname">{{ysjl}}</span>
-          </el-row>
-          <el-row :class="$style.f_hxrow">
-            <span :class="$style.f_ddname">订购金额：</span>
-            <span :class="$style.f_ddname" v-if="dgmoney===null">自动计算</span>
-            <span :class="$style.f_ddname" v-if="dgmoney!=null">{{dgmoney}}</span>
-          </el-row>
-          <p :class="$style.f_sjxx">订单备注</p>
-          <el-input
-            type="textarea"
-            :autosize="{ minRows: 2, maxRows: 4}"
-            placeholder="请输入内容"
-            style="margin-top:20px;"
-            v-model="textarea2"
-          ></el-input>
-          <span slot="footer" class="dialog-footer">
-            <span @click="sjxq = false" style="display: inline-block;" :class="$style.f_btn">取消</span>
-            <span @click="ti" style="display: inline-block;" :class="$style.f_btn">确定</span>
-          </span>
-        </el-dialog>
-      </div>
+    <!-- 编辑 -->
+    <div class="f_dgsj">
+      <el-dialog title="订购数据" :visible.sync="sjxq" width="60%" :before-close="sjdata">
+        <p :class="$style.f_jb">基本信息</p>
+        <el-row :class="$style.f_hxrow">
+          <span :class="$style.f_ddname">订单名称:</span>
+          <el-input placeholder="请输入内容" v-model="input1" :class="$style.f_hxinpt" clearable></el-input>
+        </el-row>
+        <p :class="$style.f_sjxx">数据信息</p>
+        <el-row :class="$style.f_hxrow">
+          <span :class="$style.f_ddname">源数据量：</span>
+          <span :class="$style.f_ddname">{{ysjl}}</span>
+        </el-row>
+        <el-row :class="$style.f_hxrow">
+          <span :class="$style.f_ddname">订购金额：</span>
+          <span :class="$style.f_ddname" v-if="dgmoney===null">自动计算</span>
+          <span :class="$style.f_ddname" v-if="dgmoney!=null">{{dgmoney}}</span>
+        </el-row>
+        <p :class="$style.f_sjxx">订单备注</p>
+        <el-input
+          type="textarea"
+          :autosize="{ minRows: 2, maxRows: 4}"
+          placeholder="请输入内容"
+          style="margin-top:20px;"
+          v-model="textarea2"
+        ></el-input>
+        <span slot="footer" class="dialog-footer">
+          <span @click="sjxq = false" style="display: inline-block;" :class="$style.f_btn">取消</span>
+          <span @click="ti" style="display: inline-block;" :class="$style.f_btn">确定</span>
+        </span>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -196,22 +196,25 @@ export default {
           label: '20+'
         },
       ],
-      tableData: [
+      taskList: [
         {
-          date: '2016-05-02至2016-05-02',
-          time: '21:30-24:00',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          dls: '青海数据采集中心',
-          cjname: "省级运营中心",
-          dt: '5vkt',
-          zjl: '10000/10000',
-          zsj: '1000/10000vkt',
-          ywc: 2000,
-          yhjl: '110000vkt',
-          cz: '1'
+          // date: '2016-05-02至2016-05-02',
+          // time: '21:30-24:00',
+          // name: '王小虎',
+          // address: '上海市普陀区金沙江路 1518 弄',
+          // dls: '青海数据采集中心',
+          // cjname: "省级运营中心",
+          // dt: '5vkt',
+          // zjl: '10000/10000',
+          // zsj: '1000/10000vkt',
+          // ywc: 2000,
+          // yhjl: '110000vkt',
+          // cz: '1'
         }
       ],
+      create_time: '',
+      pass: '',
+      end: '',
       date: '2017-06-03',
       mc: '青岛展柜高端人群数据采集',
       rwid: 12344,
@@ -224,35 +227,51 @@ export default {
       row: {},
       btname: '数据画像',
       createTime: '',
-      active:null,
-      ysjl:null
+      active: null,
+      ysjl: null,
+      id: null
     }
   },
   created () {
-    this.row = this.$route.query.row
+    console.log(this.$route.query.id)
+    this.id = this.$route.query.id
+    this.getList()
     this.createTime = this.$route.query.time
-    console.log(this.row)
-    // this.getList()
-    if (this.row.timePoint.pass === '') {
-      this.active = 1
-    } else if (this.row.timePoint.end === '') {
-      this.active = 2
-    } else if (this.row.timePoint.end != '') {
-      this.active = 3
-    }
+    // console.log(this.$route.query.row)
+    // this.row = this.$route.query.row
+    // this.createTime = this.$route.query.time
+    // console.log(this.row)
+    // // this.getList()
+    // if (this.row.timePoint.pass === '') {
+    //   this.active = 1
+    // } else if (this.row.timePoint.end === '') {
+    //   this.active = 2
+    // } else if (this.row.timePoint.end != '') {
+    //   this.active = 3
+    // }
   },
   methods: {
-    // getList () {
-    //   this.$http.get(`modules/order/detail`).then(res => {
-    //     var { code, data } = res.data
-    //     if (code === 1000) {
-    //       console.log(data)
-    //       this.row = data
-    //     }
-    //   }).catch(function (err) {
-    //     console.log('错误信息' + err)
-    //   })
-    // },
+    getList () {
+      this.$http.get(`modules/order/detail/${this.id}`).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          console.log(data.timePoint)
+          this.row = data
+          this.taskList = data.taskList
+          if (this.create_time != undefined) {
+            this.active = 1
+          }
+          if (this.pass != undefined) {
+            this.active = 2
+          }
+          if (this.end != undefined) {
+            this.active = 3
+          }
+        }
+      }).catch(function (err) {
+        console.log('错误信息' + err)
+      })
+    },
     queding () {
       console.log(1)
     },

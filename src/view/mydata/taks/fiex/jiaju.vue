@@ -78,7 +78,9 @@ export default {
   },
   methods: {
     getList () {
-      this.$http.get(`pc/fixedPortrait/selectFurniture?taskId=${this.id}`).then(res => {
+      this.$http.get(`pc/fixedPortrait/selectFurniture`,{params:{
+        taskid:this.id
+      }}).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.drawLine9(data);

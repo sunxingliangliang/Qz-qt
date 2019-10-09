@@ -370,6 +370,10 @@ export default {
       mid: null,
       collection: [
         {
+          value: '3',
+          label: '3米'
+        },
+        {
           value: '5',
           label: '5米'
         },

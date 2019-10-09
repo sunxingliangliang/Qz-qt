@@ -187,7 +187,7 @@ export default {
       // console.log(userinfo.user.merchantInfo.name)
       this.input1 = userinfo.user.username
       this.input = userinfo.user.name
-      this.input2 = userinfo.merchant.account.name
+      this.input2 = userinfo.merchant.companyName
       this.input3 = userinfo.merchant.account.name
       if (userinfo.merchant.proxyType === 1) {
         this.input4 = '省级运营中心'

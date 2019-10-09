@@ -34,7 +34,6 @@
       <div v-show="xz1===true" class="infinite-list-wrapper">
         <ul
           class="list"
-          v-infinite-scroll="load"
           infinite-scroll-disabled="disabled"
           style="padding:0px;"
         >
@@ -69,7 +68,7 @@
               <span :class="$style.f_sy">{{item.data_num}}/{{item.amount_count}}</span>
             </div>
             <div style="margin-top:20px">
-              <div style="display: inline-block; margin-right: 4px; width: 30%;">{{item.amount_count}}</div>
+              <div style="display: inline-block; margin-right: 4px; width: 30%;">{{item.price}}</div>
               <div
                 style="display: inline-block; margin-right: 4px; width: 30%;"
               >{{item.bonus_count}}</div>
@@ -85,12 +84,20 @@
               v-if="item.isreceive===1&item.status===1"
               :class="$style.f_btn1"
             >领取</el-button>
+              <el-button
+              type="primary"
+              style="width:100%"
+              @click="receive(item)"
+              v-if="item.isreceive===1&item.status===0"
+              :class="$style.f_btn1"
+            >领取</el-button>
             <el-button
               type="primary"
               style="width:100%"
               @click="received(item)"
               v-if="item.isreceive===0&item.status===1"
               :class="$style.f_btn2"
+              disabled
             >已领取</el-button>
             <el-button
               type="primary"
@@ -98,18 +105,19 @@
               @click="received(item)"
               v-if="item.isreceive===0&item.status===0"
               :class="$style.f_btn2"
+              disabled
             >已领取</el-button>
-            <el-button type="info" disabled style="width:100%" v-if="item.status===2">领取</el-button>
+            <el-button type="info" disabled style="width:100%" v-if="item.status===2">已结束</el-button>
           </li>
         </ul>
+       
         <p :class="$style.f_jz1" v-if="loading">加载中...</p>
-        <p :class="$style.f_jz" v-if="noMore">没有更多了</p>
+        <!-- <p :class="$style.f_jz" v-if="noMore">没有更多了</p> -->
       </div>
       <!-- 领取 -->
       <div v-show="xz3===true" class="infinite-list-wrapper">
         <ul
           class="list"
-          v-infinite-scroll="load"
           infinite-scroll-disabled="disabled"
           style="padding:0px;"
         >
@@ -144,7 +152,7 @@
               <span :class="$style.f_sy">{{item.data_num}}/{{item.amount_count}}</span>
             </div>
             <div style="margin-top:20px">
-              <div style="display: inline-block; margin-right: 4px; width: 30%;">{{item.amount_count}}</div>
+              <div style="display: inline-block; margin-right: 4px; width: 30%;">{{item.price}}</div>
               <div
                 style="display: inline-block; margin-right: 4px; width: 30%;"
               >{{item.bonus_count}}</div>
@@ -166,6 +174,7 @@
               @click="received(item)"
               v-if="item.isreceive===0&item.status===1"
               :class="$style.f_btn2"
+              disabled
             >已领取</el-button>
             <el-button
               type="primary"
@@ -173,8 +182,9 @@
               @click="received(item)"
               v-if="item.isreceive===0&item.status===0"
               :class="$style.f_btn2"
+              disabled
             >已领取</el-button>
-            <el-button type="info" disabled style="width:100%" v-if="item.status===2">领取</el-button>
+            <el-button type="info" disabled style="width:100%" v-if="item.status===2">已结束</el-button>
           </li>
         </ul>
         <p :class="$style.f_jz1" v-if="loading">加载中...</p>
@@ -184,7 +194,6 @@
       <div v-show="xz5===true" class="infinite-list-wrapper">
         <ul
           class="list"
-          v-infinite-scroll="load"
           infinite-scroll-disabled="disabled"
           style="padding:0px;"
         >
@@ -219,7 +228,7 @@
               <span :class="$style.f_sy">{{item.data_num}}/{{item.amount_count}}</span>
             </div>
             <div style="margin-top:20px">
-              <div style="display: inline-block; margin-right: 4px; width: 30%;">{{item.amount_count}}</div>
+              <div style="display: inline-block; margin-right: 4px; width: 30%;">{{item.price}}</div>
               <div
                 style="display: inline-block; margin-right: 4px; width: 30%;"
               >{{item.bonus_count}}</div>
@@ -232,6 +241,14 @@
               type="primary"
               style="width:100%"
               @click="receive(item)"
+              v-if="item.isreceive===1&item.status===1"
+              :class="$style.f_btn1"
+            >领取</el-button>
+            <el-button
+              type="primary"
+              style="width:100%"
+              @click="receive(item)"
+              v-if="item.isreceive===1&item.status===0"
               :class="$style.f_btn1"
             >领取</el-button>
             <el-button
@@ -240,6 +257,7 @@
               @click="received(item)"
               v-if="item.isreceive===0&item.status===1"
               :class="$style.f_btn2"
+              disabled
             >已领取</el-button>
             <el-button
               type="primary"
@@ -249,11 +267,23 @@
               :class="$style.f_btn2"
             >已领取</el-button>
             <el-button type="info" 
-              @click="receive(item)"  style="width:100%" v-if="item.status===2">领取</el-button>
+              @click="receive(item)"  disabled style="width:100%" v-if="item.status===2">已结束</el-button>
           </li>
         </ul>
         <p :class="$style.f_jz1" v-if="loading">加载中...</p>
         <p :class="$style.f_jz" v-if="noMore">没有更多了</p>
+      </div>
+      <!-- 分页 -->
+      <div style="display:block;float:right;margin-right:350px;">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage4"
+          :page-sizes="[9, 18, 27, 36]"
+          :page-size="100"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="zs"
+        ></el-pagination>
       </div>
     </div>
     <div :class="$style.f_jz">
@@ -302,28 +332,6 @@ export default {
       sjxq1: false,
       value3: [],
       value2: [],
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
       age: '',
       nl: '',
       zy: '',
@@ -341,15 +349,19 @@ export default {
       btmatter: '数据回购任务',
       imgsArr: [],
       pullDownDistance: 0,
-      zs: 0,
+      zs: null,
       count: 0,
       list: [],
       currentprogress: 0,
+      sizes: 9,
+      pages: 0
+
     }
   },
   created () {
+    this.qb();
     this.getList();
-    this.getCount()
+    this.getCount();
   },
   computed: {
     noMore () {
@@ -387,85 +399,26 @@ export default {
       })
     },
     getList () {
-      this.$http.get('pc/platform/merchantPlatfrom').then(res => {
+      this.$http.get('pc/platform/merchantPlatfrom',{
+        params:{
+          size: this.sizes,
+          page: this.pages
+        }
+      }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.zs = data.total
+        }else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        }else {
+          this.$message.error(res.data.message);
         }
+      }).catch((err) => {
+        console.log('错误信息' + err)
       })
-    },
-    load () {
-      this.loading = true
-      setTimeout(() => {
-        this.count += 6
-        this.$http.get('pc/platform/merchantPlatfrom').then(res => {
-          var { code, data } = res.data
-          if (code === 1000) {
-            this.list = data.content
-            this.list.forEach(item => {
-              if (item.data_num / item.amount_count === 0) {
-                item.progress = 0
-              } else if (item.data_num / item.amount_count === 1) {
-                item.progress = 1
-              } else {
-                item.progress = (item.data_num / item.amount_count) * 100
-              }
-            })
-            // this.zs=data.total
-          }
-        })
-        this.loading = false
-      }, 100)
-    },
-    load1 () {
-      this.loading = true
-      setTimeout(() => {
-        this.count += 6
-        this.$http.get('pc/platform/merchantPlatfrom',{params:{
-          status:1
-        }}).then(res => {
-          var { code, data } = res.data
-          if (code === 1000) {
-            this.list = data.content
-            this.list.forEach(item => {
-              if (item.data_num / item.amount_count === 0) {
-                item.progress = 0
-              } else if (item.data_num / item.amount_count === 1) {
-                item.progress = 1
-              } else {
-                item.progress = (item.data_num / item.amount_count) * 100
-              }
-            })
-            // this.zs=data.total
-          }
-        })
-        this.loading = false
-      }, 100)
-    },
-    load2 () {
-      this.loading = true
-      setTimeout(() => {
-        this.count += 6
-        this.$http.get('pc/platform/merchantPlatfrom',{params:{
-          status:2
-        }}).then(res => {
-          var { code, data } = res.data
-          if (code === 1000) {
-            this.list = data.content
-            this.list.forEach(item => {
-              if (item.data_num / item.amount_count === 0) {
-                item.progress = 0
-              } else if (item.data_num / item.amount_count === 1) {
-                item.progress = 1
-              } else {
-                item.progress = (item.data_num / item.amount_count) * 100
-              }
-            })
-            // this.zs=data.total
-          }
-        })
-        this.loading = false
-      }, 100)
     },
     format (percentage) {
       return percentage === 100 ? '' : ``;
@@ -486,8 +439,27 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
-      this.getList();
-      this.load()
+      this.$http.get('pc/platform/merchantPlatfrom',{
+        params:{
+          size: this.sizes,
+          // page:this.pages
+        }
+      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+            this.zs = data.total
+          this.list = data.content
+          this.list.forEach(item => {
+            if (item.data_num / item.amount_count === 0) {
+              item.progress = 0
+            } else if (item.data_num / item.amount_count === 1) {
+              item.progress = 1
+            } else {
+              item.progress = (item.data_num / item.amount_count) * 100
+            }
+          })
+        }
+      })
     },
     // 已完成任务
     ywc () {
@@ -501,7 +473,26 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
-      this.load1()
+       this.$http.get('pc/platform/merchantPlatfrom',{params:{
+          status:1,
+          size: this.sizes,
+          // page: this.pages,
+        }}).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            this.zs = data.total
+            this.list = data.content
+            this.list.forEach(item => {
+              if (item.data_num / item.amount_count === 0) {
+                item.progress = 0
+              } else if (item.data_num / item.amount_count === 1) {
+                item.progress = 1
+              } else {
+                item.progress = (item.data_num / item.amount_count) * 100
+              }
+            });
+          }
+        })
     },
     // 未完成
     wwc () {
@@ -516,7 +507,28 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
-      this.load2()
+       this.$http.get('pc/platform/merchantPlatfrom',{
+          params:{
+            status:2,
+            size: this.sizes,
+            // page: this.pages,
+          }
+        }).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            this.zs = data.total
+            this.list = data.content
+            this.list.forEach(item => {
+              if (item.data_num / item.amount_count === 0) {
+                item.progress = 0
+              } else if (item.data_num / item.amount_count === 1) {
+                item.progress = 1
+              } else {
+                item.progress = (item.data_num / item.amount_count) * 100
+              }
+            })
+          }
+        })
     },
     // 订购画像
     dghx () {
@@ -528,20 +540,206 @@ export default {
       console.log(2)
       this.dgdata = true
     },
-    handleSelectionChange (val) {
-      console.log(val)
-    },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`);
+      this.sizes = val
+      if(this.xz1 === true){
+        this.$http.get(`pc/platform/merchantPlatfrom?size=${val}`, {
+          params: {
+            size: val,
+          }
+        }).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            this.zs = data.total
+            this.list = data.content
+            this.list.forEach(item => {
+              if (item.data_num / item.amount_count === 0) {
+                item.progress = 0
+              } else if (item.data_num / item.amount_count === 1) {
+                item.progress = 1
+              } else {
+                item.progress = (item.data_num / item.amount_count) * 100
+              }
+            })
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch((err) => {
+          console.log('错误信息' + err)
+        })
+      }else if(this.xz3 === true){
+          this.$http.get(`pc/platform/merchantPlatfrom?size=${val}`, {
+          params: {
+            size: val,
+            status:1
+          }
+        }).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            this.zse = data.total
+            this.list = data.content
+            this.list.forEach(item => {
+              if (item.data_num / item.amount_count === 0) {
+                item.progress = 0
+              } else if (item.data_num / item.amount_count === 1) {
+                item.progress = 1
+              } else {
+                item.progress = (item.data_num / item.amount_count) * 100
+              }
+            })
+            // this.reload()
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch((err) => {
+          console.log('错误信息' + err)
+        })
+      }else if(this.xz5 === true){
+        this.$http.get(`pc/platform/merchantPlatfrom?size=${val}`, {
+        params: {
+          size: val,
+          status:2
+        }
+      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.zs = data.total
+          this.list = data.content
+          this.list.forEach(item => {
+            if (item.data_num / item.amount_count === 0) {
+              item.progress = 0
+            } else if (item.data_num / item.amount_count === 1) {
+              item.progress = 1
+            } else {
+              item.progress = (item.data_num / item.amount_count) * 100
+            }
+          })
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+      }
+     
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`);
+       this.pages = val
+       if(this.xz1 === true){
+          this.$http.get(`pc/platform/merchantPlatfrom`, {
+        params: {
+          page:  val-1,
+          size: this.sizes
+        }
+      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.zs = data.total
+          this.list = data.content
+          this.list.forEach(item => {
+            if (item.data_num / item.amount_count === 0) {
+              item.progress = 0
+            } else if (item.data_num / item.amount_count === 1) {
+              item.progress = 1
+            } else {
+              item.progress = (item.data_num / item.amount_count) * 100
+            }
+          })
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+       }else if(this.xz3 === true){
+          this.$http.get(`pc/platform/merchantPlatfrom`, {
+        params: {
+          page:  val-1,
+          size: this.sizes,
+          status:1
+        }
+      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.zs = data.total
+          this.list = data.content
+          this.list.forEach(item => {
+            if (item.data_num / item.amount_count === 0) {
+              item.progress = 0
+            } else if (item.data_num / item.amount_count === 1) {
+              item.progress = 1
+            } else {
+              item.progress = (item.data_num / item.amount_count) * 100
+            }
+          })
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+       }else if(this.xz5 === true){
+          this.$http.get(`pc/platform/merchantPlatfrom`, {
+        params: {
+          page:  val-1,
+          size: this.sizes,
+          status:2
+        }
+      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.zs = data.total
+          this.list = data.content
+          this.list.forEach(item => {
+            if (item.data_num / item.amount_count === 0) {
+              item.progress = 0
+            } else if (item.data_num / item.amount_count === 1) {
+              item.progress = 1
+            } else {
+              item.progress = (item.data_num / item.amount_count) * 100
+            }
+          })
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+       }
+     
     },
-    handleSizeChange1 (val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange1 (val) {
-      console.log(`当前页: ${val}`);
+    handleSelectionChange (val) {
+      console.log(val)
     },
     arraySpanMethod ({ row, column, rowIndex, columnIndex }) {
       console.log(1)
@@ -586,7 +784,6 @@ export default {
       this.pullDownDistance = 0
     },
   },
-
 }
 </script>
 
@@ -701,7 +898,6 @@ export default {
   .f_row {
     padding-left: 20px;
   }
-
   .f_bgnr {
     padding-top: 39px;
     padding-left: 34px;
@@ -753,7 +949,6 @@ export default {
     padding-left: 1%;
   }
 }
-
 .f_chaxun {
   background: #d9b4fa;
   border: 1px solid #9013fe;
@@ -810,7 +1005,6 @@ export default {
 .f_y1,
 .f_y2 {
   font-size: 12px;
-
   letter-spacing: 0;
   line-height: 24px;
   float: right;

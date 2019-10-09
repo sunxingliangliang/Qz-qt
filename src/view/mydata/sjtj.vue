@@ -23,11 +23,10 @@
       </el-card>
     </div>
     <!-- 任务筛选 -->
-    <div :class="$style.f_sx">
+    <!-- <div :class="$style.f_sx">
       <p>人群标签和数据量</p>
-      <!-- 输入框 -->
       <div id="myChart" style="position: static; width:100%; padding-bottom:20px;height:300px;"></div>
-    </div>
+    </div> -->
     <!-- 表格 -->
     <div :class="$style.f_table">
       <p style="padding-bottom:0;">数据列表</p>

@@ -221,13 +221,13 @@
         </div>
         <div v-if="areatype===2">
           <p :class="$style.f_rwmc">创建时间:</p>
-          <span>{{date}}</span>
+          <span>{{date | formatDateTime}}</span>
         </div>
       </el-row>
       <!-- 终端配置 -->
       <p :class="$style.f_jb">数据数量和奖励</p>
       <el-row :class="$style.f_row">
-        <p :class="$style.f_rwmc">数据数量</p>
+        <p :class="$style.f_rwmc">单条奖励</p>
         <el-input
           clearable
           :class="$style.f_inpt"
@@ -235,7 +235,7 @@
           @blur="planning"
           placeholder="请选择"
         ></el-input>
-        <p :class="$style.f_rwmc">单条奖励</p>
+        <p :class="$style.f_rwmc">数据数量</p>
         <el-input
           clearable
           :class="$style.f_inpt"
@@ -615,9 +615,39 @@ export default {
       Disable: false,
       // datatype:null,
       areatype: null,
-      date: '2017-2-2',
+      // date: '2017-2-2',
       Fence: false,
-      url1: {}
+      url1: {},
+      date: new Date()
+    }
+  },
+  //获取当前时间
+  filters: {
+    formatDateTime(value) {
+      let date = new Date(value);
+      let y = date.getFullYear();
+      let MM = date.getMonth() + 1;
+      MM = MM < 10 ? "0" + MM : MM;
+      let d = date.getDate();
+      d = d < 10 ? "0" + d : d;
+      let h = date.getHours();
+      h = h < 10 ? "0" + h : h;
+      let m = date.getMinutes();
+      m = m < 10 ? "0" + m : m;
+      // let s = date.getSeconds();
+      // s = s < 10 ? "0" + s : s;
+      return y + "-" + MM + "-" + d + " " + h + ":" + m ;
+    }
+  },
+ mounted() {
+    var that = this;
+    this.timer = setInterval(() => {
+      that.date = new Date(); //修改数据date
+    }, 1000);
+  },
+  beforeDestroy() {
+    if (this.timer) {
+      clearInterval(this.timer); //在Vue实例销毁前，清除我们的定时器
     }
   },
   methods: {

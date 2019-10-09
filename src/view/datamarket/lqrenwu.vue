@@ -478,34 +478,34 @@ export default {
       if (this.repeat === '重复') {
         this.$message.error('不能添加重复的设备');
         // console.log(this.terminalobj)
-      } else if (this.Groupingend != []) {
-        let lat = ''
-        let lng = ''
-        this.Groupingend.forEach(item => {
-          lat = item.lat
-          lng = item.lng
-          this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lat},${lng}&output=json&pois=1 `).then(res => {
-            // var {code,data}=res.data
-            // this.addressname = res.result.formatted_address
-            // console.log(res.result.formatted_address)
-            item.addressname = res.result.formatted_address
-            this.Grouping = {
-              name: this.group,
-              code: item.code,
-              status: item.status,
-              isNet: item.isNet,
-              lat: item.lat,
-              lng: item.lng,
-              addressname: item.addressname
-            }
-            this.terminalform.push(this.Grouping)
-            this.selectedOptions = ''
-          }).catch((err) => {
-            console.log('错误信息' + err)
-          })
-          // console.log(item)
+      // } else if (this.Groupingend != []) {
+      //   let lat = ''
+      //   let lng = ''
+      //   this.Groupingend.forEach(item => {
+      //     lat = item.lat
+      //     lng = item.lng
+      //     this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lat},${lng}&output=json&pois=1 `).then(res => {
+      //       // var {code,data}=res.data
+      //       // this.addressname = res.result.formatted_address
+      //       // console.log(res.result.formatted_address)
+      //       item.addressname = res.result.formatted_address
+      //       this.Grouping = {
+      //         name: this.group,
+      //         code: item.code,
+      //         status: item.status,
+      //         isNet: item.isNet,
+      //         lat: item.lat,
+      //         lng: item.lng,
+      //         addressname: item.addressname
+      //       }
+      //       this.terminalform.push(this.Grouping)
+      //       this.selectedOptions = ''
+      //     }).catch((err) => {
+      //       console.log('错误信息' + err)
+      //     })
+      //     // console.log(item)
 
-        })
+      //   })
       } else {
         this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${this.lat},${this.lng}&output=json&pois=1 `).then(res => {
           // var {code,data}=res.data

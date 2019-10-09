@@ -1090,10 +1090,12 @@ export default {
     },
     handleSizeChange (val) {
       this.sizes =val
-      this.$http.get(`pc/platform/list`, {        params: {
-          size: this.sizes,
-          page: this.pages
-        }      }).then(res => {
+      this.$http.get(`pc/platform/list`, {        
+          params: {
+            size: this.sizes,
+            page: this.pages
+          }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.tableData = data.content
@@ -1271,19 +1273,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // let info = new FormData()
-        // info.append('name', this.formname,)
-        // info.append('buyAmount', this.buyAmount,)
-        // info.append('ids', this.ids,)
-        // info.append('taskIds', this.id,)
-        // info.append('buyPrice', this.dgmoney,)
-        // info.append('gender', this.jzdd,)
-        // info.append('agebin', this.age,)
-        // info.append('occupation', this.zy,)
-        // info.append('workplaceProvince', this.workplace[0],)
-        // info.append('workplaceCity', this.workplace[1],)
-        // info.append('residenceProvince', this.placeofresidence[0],)
-        // info.append('residenceCity', this.placeofresidence[1])
         let info = {
           'name': this.formname,
           'buyAmount': this.buyAmount,

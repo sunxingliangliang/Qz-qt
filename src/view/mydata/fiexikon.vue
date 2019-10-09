@@ -55,12 +55,6 @@
       </div>
       <!-- 分页 -->
       <div style="text-align: right;margin-top:20px;padding-bottom: 20px;padding-right:10px;">
-        <!-- <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page="currentPage4"
-          layout="total, prev, pager, next"
-          :total="total"
-        ></el-pagination>-->
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -344,7 +338,7 @@ export default {
       this.$store.commit('myval1', this.btndd)
       this.$store.commit('myid', item.id)
       console.log(item)
-      this.$router.push({ path: '/index/datafiexpoint.vue', query: { id: item.id } })
+      this.$router.push({ path: '/index/datafiexpoint.vue', query: { id: item.id ,status:item.status} })
     },
     determine () {
       this.$confirm('是否确定提交订购画像, 是否继续?', '提示', {

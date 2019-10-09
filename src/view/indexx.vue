@@ -422,31 +422,20 @@ export default {
                 }
               }
             ],
-            series: [
-              {
-                name: '直接访问',
-                type: 'bar',
-                barWidth: '60%',
-                data: value,
-
-                itemStyle: {
-                  //通常情况下：
-                  normal: {
-                    //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
-                    color: function (params) {
-                      var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
-                      return colorList[params.dataIndex];
-                    }
-                  },
-                  //鼠标悬停时：
-                  emphasis: {
-                    shadowBlur: 10,
-                    shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                  }
-                }
+                   series: [
+          {
+            name: '数据采集',
+            type: 'line',
+            stack: '总量',
+            data: [120, 132, 101, 134, 90, 230, 600],
+            lineStyle: {
+              normal: {
+                color: '#9013FE'
               }
-            ]
+            }
+          },
+        ]
+
           }
           myChart.setOption(option);
         }
@@ -593,24 +582,13 @@ export default {
             name: '数据采集',
             type: 'line',
             stack: '总量',
-            data: [120, 132, 101, 134, 90, 230, 210],
+            data: [120, 132, 101, 134, 90, 230, 600],
             lineStyle: {
               normal: {
                 color: '#9013FE'
               }
             }
           },
-          // {
-          //   name: '微信',
-          //   type: 'line',
-          //   stack: '总量',
-          //   data: [220, 182, 191, 234, 290, 330, 310],
-          //   lineStyle: {
-          //     normal: {
-          //       color: '#3B7CFF'
-          //     }
-          //   }
-          // }
         ]
       };
       myChart.setOption(option);

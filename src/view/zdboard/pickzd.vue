@@ -475,7 +475,7 @@ export default {
     open (index, row) {
       this.row = row
       this.index= index
-      this.jbname = row.id
+      this.jbname = row.code
       this.jiebang = true
     },
     // 全部任务
@@ -490,21 +490,58 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
-      this.$http.get(`pc/device/list`, {        params: {
-          size: this.sizes,
-          type: 0
-        }      }).then(res => {
+      this.$http.get(`pc/device/list`, {        
+          params: {
+            size: this.sizes,
+            type: 0
+          }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
-          // console.log(data)
-          // this.alltableData = data.content
           data.content.forEach(item => {
-            let lng = item.lng
+             let lng = item.lng
             let lat = item.lat
-            this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lat},${lng}&output=json&pois=1 `).then(res => {
-              // console.log(res.result.formatted_address)
-              console.log(res)
-              this.formatted_address = res.result.formatted_address
+            if(lng!==null){
+              this.$jsonp(`http://api.map.baidu.com/geoconv/v1/?coords=${lng},${lat}&from=1&to=5&ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS`).then(res => {
+                console.log(res.result[0])
+                let reslat = res.result[0].y
+                let reslng = res.result[0].x
+                this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${reslat},${reslng}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                   this.formatted_address = res.result.formatted_address
+              this.Grouping = {
+                addressname: this.formatted_address,
+                lng: reslng,
+                lat: reslat,
+                code: item.code,
+                dataCount: item.dataCount,
+                fixedCode: item.fixedCode,
+                fixedName: item.fixedName,
+                fixedStatus: item.fixedStatus,
+                taskId: item.taskId,
+                groupName: item.groupName,
+                gtId: item.gtId,
+                id: item.id,
+                isNet: item.isNet,
+                isTaskRange: item.isTaskRange,
+                isTaskTime: item.isTaskTime,
+                mac_num: item.mac_num,
+                merchantId: item.merchantId,
+                status: item.status,
+                taskCode: item.taskCode,
+                taskName: item.taskName
+              }
+              this.alltableData.push(this.Grouping)
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+              }).catch(err => {
+                console.log('错误信息' + err)
+              })
+            }else{
+             this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lng},${lat}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                   this.formatted_address = res.result.formatted_address
               this.Grouping = {
                 addressname: this.formatted_address,
                 lng: item.lng,
@@ -528,12 +565,11 @@ export default {
                 taskName: item.taskName
               }
               this.alltableData.push(this.Grouping)
-            }).catch((err) => {
-              console.log('错误信息' + err)
-            })
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+            }
           })
-          console.log(this.alltableData)
-          this.total = data.total
         } else if (code == 2001) {
           this.$message.error(res.data.message);
           window.sessionStorage.clear();
@@ -875,7 +911,6 @@ export default {
     },
     bd () {
       console.log(1)
-
       this.bangding = false
     },
     tijiao1 () {
@@ -908,7 +943,6 @@ export default {
       }).catch((err) => {
         console.log('错误信息' + err)
       })
-
     },
     quxiao1 () {
       this.$message({
@@ -1030,7 +1064,6 @@ export default {
   .f_row {
     padding-left: 20px;
   }
-
   .f_bgnr {
     padding-top: 39px;
     padding-left: 34px;
@@ -1083,7 +1116,6 @@ export default {
     padding-left: 1%;
   }
 }
-
 .f_chaxun {
   background: #d9b4fa;
   border: 1px solid #9013fe;
@@ -1155,7 +1187,6 @@ export default {
 .f_y1,
 .f_y2 {
   font-size: 12px;
-
   letter-spacing: 0;
   line-height: 24px;
   float: right;

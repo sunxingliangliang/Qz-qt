@@ -722,6 +722,7 @@ export default {
     },
     point (index, row) {
       console.log(row.id)
+      // console.log(row)
       this.$http.get(`modules/order/detail/${row.id}`).then(res=>{
         var {code,data}=res.data
         if(code===1000){

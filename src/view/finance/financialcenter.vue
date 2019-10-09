@@ -24,9 +24,9 @@
               <div :class="$style.clear"></div>
               <div :class="$style.f_ky" class="ky">
                 <el-table :data="money1" style="width: 100%">
-                  <el-table-column prop="vktAmount" align="center" label="可用" width="180"></el-table-column>
+                  <el-table-column prop="vktAmount" align="center" label="全部" width="180"></el-table-column>
                   <el-table-column prop="vktFreeze" align="center" label="冻结" width="180"></el-table-column>
-                  <el-table-column prop="vktall" align="center" label="全部"></el-table-column>
+                  <el-table-column prop="vktall" align="center" label="可用"></el-table-column>
                 </el-table>
               </div>
             </div>
@@ -391,7 +391,7 @@ export default {
         var { code, data } = res.data
         if (code === 1000) {
           this.recharge = data.content
-          // this.total = data.total
+          this.total = data.total
           // this.TransactionRecord = data.content
           // this.article = data.total
         }
@@ -411,12 +411,12 @@ export default {
           var vkt = {
             vktAmount: data.vktAmount,
             vktFreeze: data.vktFreeze,
-            vktall: data.vktAmount + data.vktFreeze
+            vktall: data.vktAmount - data.vktFreeze
           }
           var cny = {
             cnyAmount: data.cnyAmount,
             cnyFreeze: data.cnyFreeze,
-            cnyall: data.cnyAmount + data.cnyFreeze
+            cnyall: data.cnyAmount - data.cnyFreeze
           }
           this.money.push(cny)
           this.money1.push(vkt)
@@ -524,7 +524,7 @@ export default {
     handleSizeChange (val) {
       this.sizes1 = val;
       this.$http.get(`pc/account/list`, {        params: {
-          size: val
+          size: val,
         }      }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
@@ -538,7 +538,8 @@ export default {
     handleCurrentChange (val) {
       this.$http.get(`pc/account/list`, {        params: {
           page: val - 1,
-          size: this.sizes1
+          size: this.sizes1,
+          type:9
         }      }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
@@ -561,14 +562,16 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
-      this.$http.get('pc/account/list', {        params: {
+      this.$http.get('pc/account/list', {        
+        params: {
           size: 10,
-          type: 2
-        }      }).then(res => {
+          type: 9
+        }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
-          this.recharge = data.content
-          this.total = data.total
+          // this.recharge = data.content
+          // this.total = data.total
           this.TransactionRecord = data.content
           this.article = data.total
         }

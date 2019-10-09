@@ -157,24 +157,25 @@ export default {
     ddxq1 (item) {
       let id = item.id
       let createTime = item.createTime
-      // console.log(createTime)
-      this.$http.get(`modules/order/detail/${id}`).then(res => {
-        var { code, data } = res.data
-        if (code === 1000) {
-          console.log(data)
-          this.$store.commit('myval1', this.btndd)
-          this.$router.push({ path: '/index/dataikonpoint.vue', query: { row: data, time: createTime } })
-        }else if (code == 2001) {
-          this.$message.error(res.data.message);
-          window.sessionStorage.clear();
-          window.localStorage.clear();
-          this.$router.push('/')
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch(function (err) {
-        console.log('错误信息' + err)
-      })
+      console.log(createTime)
+      this.$router.push({ path: '/index/dataikonpoint.vue', query: { id: id, time: createTime } })
+      // this.$http.get(`modules/order/detail/${id}`).then(res => {
+      //   var { code, data } = res.data
+      //   if (code === 1000) {
+      //     // console.log(data)
+      //     this.$store.commit('myval1', this.btndd)
+      //     this.$router.push({ path: '/index/dataikonpoint.vue', query: { row: data, time: createTime } })
+      //   }else if (code == 2001) {
+      //     this.$message.error(res.data.message);
+      //     window.sessionStorage.clear();
+      //     window.localStorage.clear();
+      //     this.$router.push('/')
+      //   } else {
+      //     this.$message.error(res.data.message);
+      //   }
+      // }).catch(function (err) {
+      //   console.log('错误信息' + err)
+      // })
 
     },
     dj1 () {

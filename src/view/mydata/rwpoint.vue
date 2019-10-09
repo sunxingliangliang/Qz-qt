@@ -49,7 +49,7 @@
         <el-table :data="tableData" border style="width: 100%;">
           <el-table-column prop="price" align="center" label="单条奖励(VKT)"></el-table-column>
           <el-table-column prop="surplus" align="center" label="剩余奖励(VKT)/总奖金(VKT)"></el-table-column>
-          <el-table-column prop="bonusCount" align="center" label="剩余数据/总数据"></el-table-column>
+          <el-table-column prop="amountCount" align="center" label="剩余数据/总数据"></el-table-column>
           <el-table-column prop="dataNum" align="center" label="已完成"></el-table-column>
           <el-table-column prop="rewardreward" align="center" label="已获奖励(VKT)"></el-table-column>
         </el-table>
@@ -343,28 +343,61 @@ export default {
           console.log(this.tableData3)
           this.tableData4 = this.row.collectList
           this.tableData5 = this.row.deviceList
-          for (let i in this.row.deviceList) {
-            this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${Number(this.row.deviceList[i].lat)},${Number(this.row.deviceList[i].lng)}&output=json&pois=1 `).then(res => {
-              // var {code,data}=res.data
-              this.addressname = res.result.formatted_address
-              this.Grouping = {
-                groupName: this.row.deviceList[i].groupName,
-                code: this.row.deviceList[i].code,
-                dataNum: this.row.deviceList[i].dataNum,
-                isNet: this.row.deviceList[i].isNet,
-                lat: this.row.deviceList[i].lat,
-                lng: this.row.deviceList[i].lng,
-                isTime: this.row.deviceList[i].isTime,
-                addressname: this.addressname
-              }
-              this.lat = this.Grouping.lat
-              this.lng = this.Grouping.lng
+           data.deviceList.forEach(item => {
+            let lng = item.lng
+            let lat = item.lat
+           if(lng!==null){
+              this.$jsonp(`http://api.map.baidu.com/geoconv/v1/?coords=${lng},${lat}&from=1&to=5&ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS`).then(res => {
+                console.log(res.result[0])
+                let reslat = res.result[0].y
+                let reslng = res.result[0].x
+                this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${reslat},${reslng}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                    this.addressname = res.result.formatted_address
+              this.Grouping = {
+                groupName: item.groupName,
+                code: item.code,
+                dataNum:item.dataNum,
+                isNet: item.isNet,
+                lat:reslat,
+                lng:reslng,
+                isTime: item.isTime,
+                addressname: this.addressname
+              }
               this.terminalform.push(this.Grouping)
-              this.selectedOptions = ''
-            }).catch((err) => {
-              console.log('错误信息' + err)
-            })
-          }
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+              }).catch(err => {
+                console.log('错误信息' + err)
+              })
+            }else{
+             this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lng},${lat}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                   this.addressname = res.result.formatted_address
+              this.Grouping = {
+                groupName: item.groupName,
+                code: item.code,
+                dataNum:item.dataNum,
+                isNet: item.isNet,
+               lng: item.lng,
+                lat: item.lat,
+                isTime: item.isTime,
+                addressname: this.addressname
+              }
+              this.terminalform.push(this.Grouping)
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+            }
+          })
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
         }
       }).catch((err) => {
         console.log('错误信息' + err)

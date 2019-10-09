@@ -57,7 +57,7 @@
             multiple
             clearable
             placeholder="请选择"
-            style="margin-left:11px;"
+            style="margin-left:11px;width:227px;"
           >
             <el-option
               v-for="item in countylevel"
@@ -82,7 +82,7 @@
             ></el-option>
           </el-select>
         </div>
-        <div style="margin-left:20px;display: inline-block;">
+        <div style="margin-left:28px;display: inline-block;">
           <span>行业/区域</span>
           <el-cascader
             v-if="datastamp===''" 
@@ -94,7 +94,6 @@
             v-model="adress1"
             :class="$style.f_inpt"
             clearable
-            style="margin-left:8px;"
 
           ></el-cascader>
           <!-- 区域props4 -->
@@ -120,7 +119,7 @@
             clearable
           ></el-cascader>
         </div>
-        <div style="margin-left:20px;display: inline-block;">
+        <div style="margin-left:30px;display: inline-block;">
           <span>场景类型</span>
           <el-cascader
             v-if="datastamp===''"
@@ -131,7 +130,7 @@
             @on-selected="gather"
             v-model="adress1"
             clearable
-            style="margin-left:10px;"
+            style="width:226px;"
           ></el-cascader>
           <!-- 区域 -->
           <el-cascader
@@ -142,6 +141,7 @@
             @change="areaname"
             v-model="twodistrict"
             clearable
+             style="width:226px;"
           ></el-cascader>
           <!-- 行业 -->
           <el-cascader
@@ -198,7 +198,7 @@
             ></el-option>
           </el-select>
         </div>
-        <div style="margin-left:20px;width:305px;display: inline-block;">
+        <div style="margin-left:29px;width:310px;display: inline-block;">
           <span>采集时间</span>
           <el-date-picker
             v-model="valuedate"
@@ -208,7 +208,7 @@
             unlink-panels
             end-placeholder="结束日期"
             value-format="yyyy-MM-dd"
-            style=" width: calc( 100% - 27%); margin-left:9px;"
+            style=" width: calc( 100% - 27%);"
             
           ></el-date-picker>
         </div>

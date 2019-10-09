@@ -44,7 +44,7 @@
                 >{{link.name}}</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-menu-item index="/index/agent.vue" @click="xjdl" v-if="proxyType===1||proxyType===2">下级代理商</el-menu-item>
+            <el-menu-item index="/index/agent.vue" @click="xjdl" v-if="proxyType===1||proxyType===2||proxyType===6">下级代理商</el-menu-item>
           </el-menu>
         </div>
         <div style="display: inline-block; vertical-align: top; float:right;margin-right:30px;">

@@ -62,7 +62,7 @@
       <p>代理商列表</p>
       <el-row :class="$style.f_row">
         <div :class="{'f_fy4':xz,'f_fy5':xz1}" style="margin-left:15px" @click="qb">全部</div>
-        <!-- <div :class="{'f_fy4':xz4,'f_fy5':xz5}" @click="sj">省级运营中心</div> -->
+        <div :class="{'f_fy4':xz4,'f_fy5':xz5}" @click="sj">省级运营中心</div>
         <div :class="{'f_fy4':xz6,'f_fy5':xz7}" @click="sj1">市级运营中心</div>
         <div :class="{'f_fy4':xz8,'f_fy5':xz9}" @click="yb">一般代理</div>
         <div style="display: inline-block; float:right;">
@@ -80,6 +80,7 @@
             <el-table-column prop="proxy_type" align="center" label="类型" width="120">
               <template slot-scope="scope">
                 <span v-if="scope.row.proxy_type===2">市级运营中心</span>
+                <span v-if="scope.row.proxy_type===1">省级运营中心</span>
                 <span v-if="scope.row.proxy_type===3">市级一般代理商</span>
               </template>
             </el-table-column>
@@ -436,10 +437,12 @@ export default {
     handleSizeChange (val) {
       this.sizes = val;
       if (this.xz1 === true) {
-        this.$http.get(`pc/merchant/followerList`, {          params: {
-            size: this.sizes,
-            page: this.pages,
-          }        }).then(res => {
+        this.$http.get(`pc/merchant/followerList`, {          
+            params: {
+              size: this.sizes,
+              page: this.pages,
+            }        
+          }).then(res => {
           var { code, data } = res.data
           if (code === 1000) {
             this.tableData = data.content
