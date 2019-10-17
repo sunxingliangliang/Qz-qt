@@ -6,6 +6,7 @@
         <el-date-picker
           v-model="value1"
           type="daterange"
+          value-format="yyyy-MM-dd"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
@@ -79,7 +80,7 @@ export default {
   methods: {
     getList () {
       this.$http.get(`pc/fixedPortrait/selectFurniture`,{params:{
-        taskid:this.id
+        taskId:this.id
       }}).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
@@ -100,8 +101,32 @@ export default {
       })
     },
     dianji3 () {
-      console.log(this.checkboxGroup2.join(','))
-      console.log(this.checkboxGroup1.join(','))
+      // console.log(this.checkboxGroup2.join(','))
+      // console.log(this.checkboxGroup1.join(','))
+       this.$http.get(`pc/fixedPortrait/selectFurniture`,{
+         params:{
+          taskId:this.id,
+          'dateStr4Start': this.value1[0],
+          'dateStr4end': this.value1[1]
+        }
+      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.drawLine9(data);
+          this.drawLine10(data);
+          this.drawLine11(data);
+          this.drawLine12(data);
+          this.drawLine13(data);
+          this.drawLine14(data);
+          this.drawLine15(data);
+          this.drawLine17(data);
+          this.drawLine18(data);
+          this.drawLine19(data);
+          this.drawLine20(data);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
     },
     drawLine9 (data) {
       let decorationMaterials = []

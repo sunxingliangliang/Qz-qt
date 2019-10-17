@@ -639,7 +639,7 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage4"
+          :current-page.sync ="currentPage4"
           :page-sizes="[10, 20, 30, 40]"
           :page-size="100"
           layout="total, sizes, prev, pager, next, jumper"
@@ -776,7 +776,7 @@
             clearable
           ></el-input>
         </div>
-        <div :class="$style.f_hxrow">
+        <!-- <div :class="$style.f_hxrow">
           <div style="line-height: 40px;margin-right: 1%;display: inline-block;">
             <span :class="$style.f_ddname">数据范围:</span>
           </div>
@@ -847,10 +847,10 @@
               ></el-option>
             </el-select>
           </div>
-        </div>
+        </div> -->
         <div :class="$style.f_hxrow">
           <span :class="$style.f_ddname">订购金额：</span>
-          <span :class="$style.f_ddname" v-if="dgmoney!=null">{{dgmoney}}</span>
+          <span :class="$style.f_ddname" v-if="dgmoney!=null">{{dgmoney}}VKT</span>
         </div>
         <p :class="$style.f_jb" style="margin-top:20px;">媒体平台</p>
         <div style="margin-top:20px;">
@@ -915,6 +915,7 @@ export default {
   },
   data () {
     return {
+      paginationShow:true,
       num: null,
       num1: null,
       num2: null,
@@ -1165,10 +1166,13 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
-      this.$http.get(`pc/task/list`, {        params: {
-          tab: 0,
-          size: this.sizes
-        }      }).then(res => {
+      this.currentPage4 = 1
+      this.$http.get(`pc/task/list`, {        
+          params: {
+            tab: 0,
+            size: this.sizes
+          }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.total = data.total
@@ -1176,10 +1180,8 @@ export default {
           this.tableData.forEach(item => {
             item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
-            // item.cj = item.collectList[0].scencesName
             if (item.collectList[0] === undefined) {
             } else {
-              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
             }
           })
@@ -1215,10 +1217,12 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get(`pc/task/list`, {        params: {
           tab: 1,
-          size: this.sizes
-        }      }).then(res => {
+          size: this.sizes,
+        }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.total = data.total
@@ -1226,12 +1230,9 @@ export default {
           this.tableData.forEach(item => {
             item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
-            // item.cj = item.collectList[0].scencesName
-            // this.tableData1 = item.collectList
             if (item.collectList[0] === undefined) {
               console.log(1)
             } else {
-              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
             }
           })
@@ -1260,6 +1261,7 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get(`pc/task/list`, {        params: {
           tab: 2,
           size: this.sizes
@@ -1271,12 +1273,9 @@ export default {
           this.tableData.forEach(item => {
             item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
-            // item.cj = item.collectList[0].scencesName
-            // this.tableData1 = item.collectList
             if (item.collectList[0] === undefined) {
               console.log(1)
             } else {
-              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
             }
           })
@@ -1305,6 +1304,7 @@ export default {
       this.xz7 = true
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get(`pc/task/list`, {        params: {
           tab: 3,
           size: this.sizes
@@ -1316,12 +1316,9 @@ export default {
           this.tableData.forEach(item => {
             item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
-            // item.cj = item.collectList[0].scencesName
-            // this.tableData1 = item.collectList
             if (item.collectList[0] === undefined) {
               console.log(1)
             } else {
-              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
             }
           })
@@ -1350,6 +1347,7 @@ export default {
       this.xz7 = false
       this.xz8 = false
       this.xz9 = true
+      this.currentPage4 = 1
       this.$http.get(`pc/task/list`, {        params: {
           tab: 4,
           size: this.sizes
@@ -1361,12 +1359,9 @@ export default {
           this.tableData.forEach(item => {
             item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
             item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
-            // item.cj = item.collectList[0].scencesName
-            // this.tableData1 = item.collectList
             if (item.collectList[0] === undefined) {
               console.log(1)
             } else {
-              // console.log(item.collectList[0])
               item.cj = item.collectList[0].scencesName
             }
           })
@@ -1386,12 +1381,14 @@ export default {
     // 搜索
     inquire () {
       if (this.xz1 === true) {
-        this.$http.get(`pc/task/list`, {          params: {
-            tab: 0,
-            size: this.sizes,
-            keyWord: this.search1,
-            QueryDate: this.value1
-          }        }).then(res => {
+        this.$http.get(`pc/task/list`, {          
+            params: {
+              tab: 0,
+              size: this.sizes,
+              keyWord: this.search1,
+              QueryDate: this.value1
+            }        
+          }).then(res => {
           var { code, data } = res.data
           if (code === 1000) {
             this.tableData = data.content
@@ -1556,22 +1553,16 @@ export default {
     point (index, row) {
       let id = row.id
       console.log(id)
-      // this.$store.commit('myval1', this.btmatter)
-      // this.$http.get(`/pc/task/detail/${id}`).then(res => {
-      //   var { code, data } = res.data
-      //   if (code === 1000) {
       this.$router.push({ path: '/index/rwpoint.vue', query: { id: id, rwname: row.name } })
-      //   }
-      // }).catch(function (err) {
-      //   console.log("连接错误" + err)
-      // })
     },
     handleSizeChange (val) {
       this.sizes = val;
-      this.$http.get(`pc/task/list?tab=0&size=${val}`, {        params: {
-          tab: 0,
-          size: val,
-        }      }).then(res => {
+      this.$http.get(`pc/task/list`, {        
+          params: {
+            tab: 0,
+            size: val,
+          }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.total = data.total
@@ -1599,39 +1590,175 @@ export default {
         console.log("连接错误" + err)
       });
     },
-    handleCurrentChange (val) {
-      this.$http.get(`pc/task/list`, {        params: {
-          tab: 0,
-          size: this.sizes,
-          page: val - 1
-        }      }).then(res => {
+    handleCurrentChange (val) {   
+      this.pages = val
+      if(this.xz1 === true){
+        this.$http.get(`pc/task/list`, {
+          params: {
+            tab: 0,
+            size: this.sizes,
+            page: val - 1,
+          }      
+        }).then(res => {
         var { code, data } = res.data
-        if (code === 1000) {
-          this.total = data.total
-          this.tableData = data.content
-          this.tableData.forEach(item => {
-            item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
-            item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
-            // item.cj = item.collectList[0].scencesName
-            console.log(item.collectList)
-            if (item.collectList[0] === undefined) {
-              console.log(1)
-            } else if (item.collectList[0] != undefined) {
-              // console.log(item.collectList[0])
-              item.cj = item.collectList[0].scencesName
-            }
-          })
-        } else if (code == 2001) {
-          this.$message.error(res.data.message);
-          window.sessionStorage.clear();
-          window.localStorage.clear();
-          this.$router.push('/')
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch(function (err) {
-        console.log("连接错误" + err)
-      });
+          if (code === 1000) {
+            this.total = data.total
+            this.tableData = data.content
+            this.tableData.forEach(item => {
+              item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
+              item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
+              console.log(item.collectList)
+              if (item.collectList[0] === undefined) {
+                console.log(1)
+              } else if (item.collectList[0] != undefined) {
+                item.cj = item.collectList[0].scencesName
+              }
+            })
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch(function (err) {
+          console.log("连接错误" + err)
+        });
+      }else if(this.xz3 === true){
+         this.$http.get(`pc/task/list`, {        
+          params: {
+            tab: 1,
+            size: this.sizes,
+            page: val - 1,
+          }      
+        }).then(res => {
+        var { code, data } = res.data
+          if (code === 1000) {
+            this.total = data.total
+            this.tableData = data.content
+            this.tableData.forEach(item => {
+              item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
+              item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
+              console.log(item.collectList)
+              if (item.collectList[0] === undefined) {
+                console.log(1)
+              } else if (item.collectList[0] != undefined) {
+                item.cj = item.collectList[0].scencesName
+              }
+            })
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch(function (err) {
+          console.log("连接错误" + err)
+        });
+      }else if(this.xz5 === true){
+         this.$http.get(`pc/task/list`, {        
+          params: {
+            tab: 2,
+            size: this.sizes,
+            page: val - 1
+          }      
+        }).then(res => {
+        var { code, data } = res.data
+          if (code === 1000) {
+            this.total = data.total
+            this.tableData = data.content
+            this.tableData.forEach(item => {
+              item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
+              item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
+              console.log(item.collectList)
+              if (item.collectList[0] === undefined) {
+                console.log(1)
+              } else if (item.collectList[0] != undefined) {
+                item.cj = item.collectList[0].scencesName
+              }
+            })
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch(function (err) {
+          console.log("连接错误" + err)
+        });
+      }else if(this.xz7 === true){
+         this.$http.get(`pc/task/list`, {        
+          params: {
+            tab: 3,
+            size: this.sizes,
+            page: val - 1
+          }      
+        }).then(res => {
+        var { code, data } = res.data
+          if (code === 1000) {
+            this.total = data.total
+            this.tableData = data.content
+            this.tableData.forEach(item => {
+              item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
+              item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
+              console.log(item.collectList)
+              if (item.collectList[0] === undefined) {
+                console.log(1)
+              } else if (item.collectList[0] != undefined) {
+                item.cj = item.collectList[0].scencesName
+              }
+            })
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch(function (err) {
+          console.log("连接错误" + err)
+        });
+      }else if(this.xz9 === true){
+         this.$http.get(`pc/task/list`, {        
+          params: {
+            tab: 4,
+            size: this.sizes,
+            page: val - 1
+          }      
+        }).then(res => {
+        var { code, data } = res.data
+          if (code === 1000) {
+            this.total = data.total
+            this.tableData = data.content
+            this.tableData.forEach(item => {
+              item.date = item.fromDate + '\n' + '至' + '\n' + item.toDate
+              item.time = item.fromTime + ':00' + '-' + item.toTime + ':00'
+              console.log(item.collectList)
+              if (item.collectList[0] === undefined) {
+                console.log(1)
+              } else if (item.collectList[0] != undefined) {
+                item.cj = item.collectList[0].scencesName
+              }
+            })
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch(function (err) {
+          console.log("连接错误" + err)
+        });
+      }
+     
     },
     // 订购画像
     orderikion () {

@@ -54,7 +54,7 @@
             <div>
               <div :class="$style.f_czjl">
                 <p :class="$style.f_cz">充值记录</p>
-                <el-date-picker
+                <!-- <el-date-picker
                   v-model="value1"
                   @change="selectionperiod"
                   type="daterange"
@@ -63,7 +63,7 @@
                   end-placeholder="结束日期"
                   :class="$style.f_cxrq"
                   value-format="yyyy-MM-dd"
-                ></el-date-picker>
+                ></el-date-picker> -->
                 <div :class="$style.clear"></div>
               </div>
               <div>
@@ -131,7 +131,7 @@
                 <div :class="{'f_fy4':xz2,'f_fy5':xz3}" @click="ywc">数据服务</div>
                 <div :class="{'f_fy4':xz4,'f_fy5':xz5}" @click="wwc">数据收益</div>
                 <div :class="{'f_fy4':xz6,'f_fy5':xz7}" @click="zzrw">任务奖励</div>
-                <el-date-picker
+                <!-- <el-date-picker
                   v-model="value2"
                   type="daterange"
                   @change="Querytime"
@@ -140,7 +140,7 @@
                   end-placeholder="结束日期"
                   style="float: right;"
                   value-format="yyyy-MM-dd"
-                ></el-date-picker>
+                ></el-date-picker> -->
               </div>
               <!-- 表格内容 -->
               <!-- 全部 -->
@@ -266,7 +266,7 @@
                 <el-pagination
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
-                  :current-page="currentPage4"
+                  :current-page.sync="currentPage4"
                   :page-sizes="[10, 20, 30, 40]"
                   :page-size="10"
                   layout="total, sizes, prev, pager, next, jumper"
@@ -523,9 +523,11 @@ export default {
     },
     handleSizeChange (val) {
       this.sizes1 = val;
-      this.$http.get(`pc/account/list`, {        params: {
-          size: val,
-        }      }).then(res => {
+      this.$http.get(`pc/account/list`, {        
+          params: {
+            size: val,
+          }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.TransactionRecord = data.content
@@ -536,11 +538,14 @@ export default {
       })
     },
     handleCurrentChange (val) {
-      this.$http.get(`pc/account/list`, {        params: {
-          page: val - 1,
-          size: this.sizes1,
-          type:9
-        }      }).then(res => {
+      if(this.xz1 === true){
+         this.$http.get(`pc/account/list`, {        
+          params: {
+            page: val - 1,
+            size: this.sizes1,
+            type:9
+          }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.TransactionRecord = data.content
@@ -549,6 +554,56 @@ export default {
       }).catch((err) => {
         console.log('错误信息' + err)
       })
+      } else if(this.xz7 === true){
+         this.$http.get(`pc/account/list`, {        
+          params: {
+            page: val - 1,
+            size: this.sizes1,
+            type:6
+          }      
+        }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.TransactionRecord = data.content
+          this.totaarticlel = data.total
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+      }else if(this.xz3 === true){
+        this.$http.get(`pc/account/list`, {        
+          params: {
+            page: val - 1,
+            size: this.sizes1,
+            type:0
+          }      
+        }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.TransactionRecord = data.content
+          this.totaarticlel = data.total
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+      }else if(this.xz5 === true){
+        this.$http.get(`pc/account/list`, {        
+          params: {
+            page: val - 1,
+            size: this.sizes1,
+            type:5
+          }      
+        }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.TransactionRecord = data.content
+          this.totaarticlel = data.total
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+      }
+     
     },
     // 全部任务
     qb () {
@@ -562,6 +617,7 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get('pc/account/list', {        
         params: {
           size: 10,
@@ -591,6 +647,7 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get('pc/account/list', {        
         params: {
           size: 10,
@@ -620,6 +677,7 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get('pc/account/list', {        params: {
           size: 10,
           type: 5
@@ -647,10 +705,13 @@ export default {
       this.xz7 = true
       this.xz8 = true
       this.xz9 = false
-      this.$http.get('pc/account/list', {        params: {
-          size: 10,
-          type: 6
-        }      }).then(res => {
+      this.currentPage4 = 1
+      this.$http.get('pc/account/list', {        
+          params: {
+            size: 10,
+            type: 6
+          }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.recharge = data.content

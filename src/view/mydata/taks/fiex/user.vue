@@ -6,10 +6,18 @@
         <el-date-picker
           v-model="value1"
           type="daterange"
+          value-format="yyyy-MM-dd"
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
+        <!-- <el-date-picker
+          v-model="value1"
+          type="datetimerange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          >
+        </el-date-picker> -->
         <el-button :class="$style.f_btn" @click="dianji3" size="medium">查询</el-button>
       </div>
     </el-row>
@@ -115,7 +123,8 @@ export default {
       mc12: '有无小孩',
       id: '',
       value1: '',
-
+      startTime: '',
+        endTime: ''
     }
   },
   mounted () {
@@ -158,11 +167,10 @@ export default {
       })
     },
     dianji3 () {
-      console.log(this.checkboxGroup2.join(','))
-      console.log(this.checkboxGroup1.join(','))
         this.$http.get(`pc/fixedPortrait/selectUserScore`,{params:{
-        taskId:this.id
-        
+        taskId:this.id,
+        'dateStr4Start': this.value1[0],
+        'dateStr4end': this.value1[1]
       }}).then(res => {
         var { code, data } = res.data
         if (code === 1000) {

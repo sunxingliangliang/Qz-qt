@@ -7,6 +7,7 @@
           v-model="value1"
           type="daterange"
           range-separator="至"
+          value-format="yyyy-MM-dd"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         ></el-date-picker>
@@ -20,7 +21,7 @@
           <template slot-scope="scope">
             <img :src="scope.row.icon" alt style="width: 50px; height: 50px;margin-left: -50px;">
             <span
-              style="    position: absolute; top: 28px;    margin-left: 10px;"
+              style="position: absolute; top: 28px;margin-left: 10px;"
             >{{scope.row.name}}</span>
           </template>
         </el-table-column>
@@ -67,9 +68,11 @@ export default {
   },
   methods: {
     getList () {
-      this.$http.get(`pc/fixedPortrait/selectAppinfo`,{params:{
-        taskid:this.id
-      }}).then(res => {
+        this.$http.get(`pc/fixedPortrait/selectAppinfo`,{
+          params:{
+          taskId:this.id
+        }
+      }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.tableData1 = data
@@ -79,8 +82,20 @@ export default {
       })
     },
     dianji3 () {
-      console.log(this.checkboxGroup2.join(','))
-      console.log(this.checkboxGroup1.join(','))
+     this.$http.get(`pc/fixedPortrait/selectAppinfo`,{
+          params:{
+          taskId:this.id,
+          'dateStr4Start': this.value1[0],
+          'dateStr4end': this.value1[1]
+        }
+      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.tableData1 = data
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
     },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);

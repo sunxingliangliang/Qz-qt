@@ -355,7 +355,7 @@ export default {
       var str = row.lbs
       // var str = '[[{\"lng\":120.360538,\"lat\":36.11021},{\"lng\":120.406244,\"lat\":36.11021},{\"lng\":120.408687,\"lat\":36.083497},{\"lng\":120.356082,\"lat\":36.078596},{\"lng\":120.347459,\"lat\":36.088397}]]'
       var strObj = JSON.parse(str)
-      var points = strObj[0];
+      var points = strObj;
       // 百度坐标系坐标(地图中需要使用这个)
       var bPoints = new Array();
       //创建标注点并添加到地图中
@@ -477,38 +477,8 @@ export default {
       console.log(this.Groupingend)
       if (this.repeat === '重复') {
         this.$message.error('不能添加重复的设备');
-        // console.log(this.terminalobj)
-      // } else if (this.Groupingend != []) {
-      //   let lat = ''
-      //   let lng = ''
-      //   this.Groupingend.forEach(item => {
-      //     lat = item.lat
-      //     lng = item.lng
-      //     this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lat},${lng}&output=json&pois=1 `).then(res => {
-      //       // var {code,data}=res.data
-      //       // this.addressname = res.result.formatted_address
-      //       // console.log(res.result.formatted_address)
-      //       item.addressname = res.result.formatted_address
-      //       this.Grouping = {
-      //         name: this.group,
-      //         code: item.code,
-      //         status: item.status,
-      //         isNet: item.isNet,
-      //         lat: item.lat,
-      //         lng: item.lng,
-      //         addressname: item.addressname
-      //       }
-      //       this.terminalform.push(this.Grouping)
-      //       this.selectedOptions = ''
-      //     }).catch((err) => {
-      //       console.log('错误信息' + err)
-      //     })
-      //     // console.log(item)
-
-      //   })
       } else {
         this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${this.lat},${this.lng}&output=json&pois=1 `).then(res => {
-          // var {code,data}=res.data
           this.addressname = res.result.formatted_address
           this.Grouping = {
             name: this.group,
@@ -521,16 +491,7 @@ export default {
           }
           this.terminalobj = this.Grouping
           this.terminalform.push(this.terminalobj)
-          // this.terminalform.forEach(item => {
-          //   console.log(item.code)
-          //   if (this.Grouping.code === item.code) {
-          //     console.log('该设备已添加，请勿重复添加')
-          //   } else {
-          //     this.terminalform.push(this.Grouping)
-          //   }
-          // })
           this.selectedOptions = ''
-          // console.log(this.terminalform)
         }).catch((err) => {
           console.log('错误信息' + err)
         })

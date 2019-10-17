@@ -72,7 +72,7 @@
               <el-table-column prop="code" align="center" label="采集终端" show-overflow-tooltip></el-table-column>
               <el-table-column type="selection" align="center" label="操作"></el-table-column>
             </el-table>
-            <!-- <el-table
+            <el-table
               :data="Grouping2"
               tooltip-effect="dark"
               border
@@ -91,7 +91,7 @@
             >
               <el-table-column prop="code" align="center" label="采集终端" show-overflow-tooltip></el-table-column>
               <el-table-column type="selection" align="center" label="操作"></el-table-column>
-            </el-table> -->
+            </el-table>
           </div>
           <span slot="footer" class="dialog-footer">
             <el-button type="info" @click="dialogVisible = false">取 消</el-button>

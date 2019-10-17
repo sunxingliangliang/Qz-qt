@@ -386,7 +386,7 @@ export default {
           label: '20米'
         },
         {
-          value: '0',
+          value: '100',
           label: '20+'
         },
       ],
@@ -1292,16 +1292,7 @@ export default {
           }
           this.terminalobj = this.Grouping
           this.terminalform.push(this.terminalobj)
-          // this.terminalform.forEach(item => {
-          //   console.log(item.code)
-          //   if (this.Grouping.code === item.code) {
-          //     console.log('该设备已添加，请勿重复添加')
-          //   } else {
-          //     this.terminalform.push(this.Grouping)
-          //   }
-          // })
           this.selectedOptions = ''
-          // console.log(this.terminalform)
         }).catch((err) => {
           console.log('错误信息' + err)
         })

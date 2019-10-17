@@ -317,8 +317,8 @@ export default {
           label: '20米'
         },
         {
-          value: '0',
-          label: '20+'
+          value: '100',
+          label: '20米+'
         },
       ],
       options: [],

@@ -6,7 +6,6 @@
         <router-link
           to="/index/fiexpoint.vue/user.vue"
           :class="{'f_fy6':xz,'f_fy7':xz1}"
-          s
           @click.native="dj"
         >用户画像</router-link>
         <router-link

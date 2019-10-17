@@ -150,7 +150,10 @@
           </el-table-column>
           <el-table-column align="center" label="操作">
             <template slot-scope="scope">
-              <span :class="$style.f_delete" @click="handleDelete(scope.$index, terminalform,scope.row)">删除</span>
+              <span
+                :class="$style.f_delete"
+                @click="handleDelete(scope.$index, terminalform,scope.row)"
+              >删除</span>
             </template>
           </el-table-column>
         </el-table>
@@ -170,8 +173,8 @@
     </div>
     <!-- 地图 -->
     <div class="f_dg">
-      <el-dialog title="场景地点" :visible.sync="ikon" width="30%" :before-close="gb">
-        <baidu-map class="map" style="height:300px" :center="center" :zoom="18">
+      <el-dialog v-if="hackReset" title="场景地点" :visible.sync="ikon" width="30%" :before-close="gb">
+        <baidu-map class="map"  style="height:300px" :center="center" :zoom="18">
           <bm-marker :position="center" :dragging="true" @click="infoWindowOpen">
             <bm-info-window
               :show="show"
@@ -198,6 +201,7 @@ import footerl from '../footer/footerl'
 import axios from 'axios'
 import tb1 from '../../assets/img/坐标1.gif'
 export default {
+  inject: ['reload'],
   components: {
     footerl
   },
@@ -296,7 +300,8 @@ export default {
       Center: {},
       polygonPath: [],
       devicefrom: {},
-      deviceid: null
+      deviceid: null,
+      hackReset:true
     }
   },
   mounted () {
@@ -306,7 +311,7 @@ export default {
   },
   methods: {
     queding () {
-      console.log(this.selectedOptions)
+      // console.log(this.selectedOptions)
     },
     getGrouping () {
       this.$http.get(`pc/task/detail/${this.id}`).then(res => {
@@ -327,68 +332,61 @@ export default {
             date: data.fromDate + '至' + data.toDate,
             time: data.fromTime + ':00' + '至' + data.toTime + ':00'
           }
-          if(this.platformTask!=null){
-          let money={
-            price:data.platformTask.price,
-            surplus:data.platformTask.bonusCount-(data.platformTask.price*this.dataNum),
-            bonusCount:data.platformTask.bonusCount,
-            surplusdata:data.platformTask.amountCount-this.dataNum,
-            amountCount:data.platformTask.amountCount,
-            dataNum:this.dataNum,
-            rewardreward:data.platformTask.price*this.dataNum
-          }
-          this.tableData.push(money)
+          if (this.platformTask != null) {
+            let money = {
+              price: data.platformTask.price,
+              surplus: data.platformTask.bonusCount - (data.platformTask.price * this.dataNum),
+              bonusCount: data.platformTask.bonusCount,
+              surplusdata: data.platformTask.amountCount - this.dataNum,
+              amountCount: data.platformTask.amountCount,
+              dataNum: this.dataNum,
+              rewardreward: data.platformTask.price * this.dataNum
+            }
+            this.tableData.push(money)
           }
           this.tableData3.push(this.obj)
-          console.log(this.tableData3)
           this.tableData4 = this.row.collectList
-          this.tableData5 = this.row.deviceList
-           data.deviceList.forEach(item => {
+          data.deviceList.forEach(item => {
             let lng = item.lng
             let lat = item.lat
-           if(lng!==null){
-              this.$jsonp(`http://api.map.baidu.com/geoconv/v1/?coords=${lng},${lat}&from=1&to=5&ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS`).then(res => {
-                console.log(res.result[0])
-                let reslat = res.result[0].y
-                let reslng = res.result[0].x
-                this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${reslat},${reslng}&output=json&pois=1 `).then(res => {
-                  // console.log(res.result)
-                    this.addressname = res.result.formatted_address
-              this.Grouping = {
-                groupName: item.groupName,
-                code: item.code,
-                dataNum:item.dataNum,
-                isNet: item.isNet,
-                lat:reslat,
-                lng:reslng,
-                isTime: item.isTime,
-                addressname: this.addressname
-              }
-              this.terminalform.push(this.Grouping)
-                }).catch((err) => {
+            if (lng !== null) {
+              if (item.lng === '') {
+                this.Grouping = {
+                  groupName: item.groupName,
+                  code: item.code,
+                  dataNum: item.dataNum,
+                  isNet: item.isNet,
+                  lat: item.lat,
+                  lng: item.lng,
+                  isTime: item.isTime,
+                  addressname: ''
+                }
+                this.terminalform.push(this.Grouping)
+              } else {
+                this.$jsonp(`http://api.map.baidu.com/geoconv/v1/?coords=${lng},${lat}&from=1&to=5&ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS`).then(res => {
+                  // console.log(res.result[0])
+                  let reslat = res.result[0].y
+                  let reslng = res.result[0].x
+                  this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${reslat},${reslng}&output=json&pois=1 `).then(res => {
+                    this.addressname = res.result.formatted_address
+                    this.Grouping = {
+                      groupName: item.groupName,
+                      code: item.code,
+                      dataNum: item.dataNum,
+                      isNet: item.isNet,
+                      lat: reslat,
+                      lng: reslng,
+                      isTime: item.isTime,
+                      addressname: this.addressname
+                    }
+                    this.terminalform.push(this.Grouping)
+                  }).catch((err) => {
+                    console.log('错误信息' + err)
+                  })
+                }).catch(err => {
                   console.log('错误信息' + err)
                 })
-              }).catch(err => {
-                console.log('错误信息' + err)
-              })
-            }else{
-             this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lng},${lat}&output=json&pois=1 `).then(res => {
-                  // console.log(res.result)
-                   this.addressname = res.result.formatted_address
-              this.Grouping = {
-                groupName: item.groupName,
-                code: item.code,
-                dataNum:item.dataNum,
-                isNet: item.isNet,
-               lng: item.lng,
-                lat: item.lat,
-                isTime: item.isTime,
-                addressname: this.addressname
-              }
-              this.terminalform.push(this.Grouping)
-                }).catch((err) => {
-                  console.log('错误信息' + err)
-                })
+              }
             }
           })
         } else if (code == 2001) {
@@ -409,7 +407,7 @@ export default {
         this.$http.get(`/pc/group/findGroup`).then(res => {
           var { code, data } = res.data
           if (code === 1000) {
-            console.log(data)
+            // console.log(data)
             data.forEach(item => {
               if (this.selectedOptions[0][0] == item.id) {
                 this.group = item.name
@@ -456,8 +454,8 @@ export default {
             message: '添加成功',
             type: 'success'
           });
+          this.reload()
           this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${this.lat},${this.lng}&output=json&pois=1 `).then(res => {
-            // var {code,data}=res.data
             this.addressname = res.result.formatted_address
             this.Grouping = {
               groupName: this.group,
@@ -468,16 +466,12 @@ export default {
               lng: this.lng,
               addressname: this.addressname,
             }
+            this.devicefrom = this.Grouping
+            this.terminalform.push(this.devicefrom)
+            this.selectedOptions = ''
           }).catch((err) => {
             console.log('错误信息' + err)
           })
-          this.devicefrom= this.Grouping
-          // this.devicefrom = this.Grouping
-          console.log(this.Grouping)
-          console.log(this.devicefrom)
-          this.terminalform.push(this.devicefrom)
-          console.log(this.terminalform)
-          this.selectedOptions = ''
         } else {
           this.$message.error(res.data.message);
         }
@@ -494,12 +488,12 @@ export default {
     // 地理围栏
     Geofence (index, row) {
       this.Fence = true
-      console.log(row)
+      // console.log(row)
       var str = row.lbs
       // var str = '[[{\"lng\":120.360538,\"lat\":36.11021},{\"lng\":120.406244,\"lat\":36.11021},{\"lng\":120.408687,\"lat\":36.083497},{\"lng\":120.356082,\"lat\":36.078596},{\"lng\":120.347459,\"lat\":36.088397}]]'
       var strObj = JSON.parse(str)
       var points = strObj;
-      console.log(points)
+      // console.log(points)
       // 百度坐标系坐标(地图中需要使用这个)
       var bPoints = new Array();
       //创建标注点并添加到地图中
@@ -562,25 +556,25 @@ export default {
       }
     },
     cli1 () {
-      console.log(1)
+      // console.log(1)
     },
     Delete (index, row) {
-      console.log(index, row)
+      // console.log(index, row)
     },
-    handleDelete (index, rows,row) {
-      console.log(rows,row)
+    handleDelete (index, rows, row) {
+      // console.log(rows,row)
       let info = {
         taskId: this.id,
         devCode: row.code,
       }
-      this.$http.post(`pc/task/delDevice`,info).then(res => {
+      this.$http.post(`pc/task/delDevice`, info).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.$message({
             message: '已删除',
             type: 'success'
           });
-           rows.splice(index, 1);
+          rows.splice(index, 1);
         } else {
           this.$message.error(res.data.message);
         }
@@ -589,22 +583,29 @@ export default {
       })
     },
     point (index, row) {
-      console.log(row)
+      // this.pos(row)
+      this.show = true
+      this.center = {}
       this.center = {
         lat: Number(row.lat),
         lng: Number(row.lng)
       }
       this.addressname = row.addressname
-      console.log(this.center)
+      // console.log(this.center)
       this.ikon = true
     },
     gb () {
+      this.hackReset = false
+      this.$nextTick(() => {
+        this.hackReset = true
+      })
+      this.center = {}
       this.ikon = false
-    }
+    },
   },
   created () {
     this.row = this.$route.query.row
-    console.log(this.row)
+    // console.log(this.row)
   },
 }
 </script>

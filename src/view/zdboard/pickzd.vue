@@ -41,7 +41,7 @@
       </div>
       <!-- 表格内容 -->
       <!-- 全部 -->
-      <div v-if="xz1===true">
+      <div v-show="xz1===true">
         <div :class="$style.f_bgnr">
           <el-table
             :data="alltableData"
@@ -106,7 +106,7 @@
         </div>
       </div>
       <!-- 采集中 -->
-      <div v-if="xz3===true">
+      <div v-show="xz3===true">
         <div :class="$style.f_bgnr">
           <el-table
             :data="alltableData"
@@ -171,7 +171,7 @@
         </div>
       </div>
       <!-- 待采集 -->
-      <div v-if="xz5===true">
+      <div v-show="xz5===true">
         <div :class="$style.f_bgnr">
           <el-table
             :data="alltableData"
@@ -236,7 +236,7 @@
         </div>
       </div>
       <!-- 已联网 -->
-      <div v-if="xz7===true">
+      <div v-show="xz7===true">
         <div :class="$style.f_bgnr">
           <el-table
             :data="alltableData"
@@ -338,7 +338,7 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage4"
+          :current-page.sync="currentPage4"
           :page-sizes="[10, 20, 30, 40]"
           :page-size="100"
           layout="total, sizes, prev, pager, next, jumper"
@@ -372,7 +372,6 @@ export default {
   components: {
     footerl
   },
-  inject: ['reload'],
   data () {
     return {
       textarea2: '',
@@ -490,14 +489,123 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get(`pc/device/list`, {        
           params: {
             size: this.sizes,
-            type: 0
+            type: 0,
           }      
         }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
+          this.alltableData = []
+          this.total = data.total
+          data.content.forEach(item => {
+            let lng = item.lng
+            let lat = item.lat
+            if(lng!==null){
+              this.$jsonp(`http://api.map.baidu.com/geoconv/v1/?coords=${lng},${lat}&from=1&to=5&ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS`).then(res => {
+                console.log(res.result[0])
+                let reslat = res.result[0].y
+                let reslng = res.result[0].x
+                this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${reslat},${reslng}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                  this.formatted_address = res.result.formatted_address
+                  this.Grouping = {
+                    addressname: this.formatted_address,
+                    lng: reslng,
+                    lat: reslat,
+                    code: item.code,
+                    dataCount: item.dataCount,
+                    fixedCode: item.fixedCode,
+                    fixedName: item.fixedName,
+                    fixedStatus: item.fixedStatus,
+                    taskId: item.taskId,
+                    groupName: item.groupName,
+                    gtId: item.gtId,
+                    id: item.id,
+                    isNet: item.isNet,
+                    isTaskRange: item.isTaskRange,
+                    isTaskTime: item.isTaskTime,
+                    mac_num: item.mac_num,
+                    merchantId: item.merchantId,
+                    status: item.status,
+                    taskCode: item.taskCode,
+                    taskName: item.taskName
+                  }
+                  this.alltableData.push(this.Grouping)
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+              }).catch(err => {
+                console.log('错误信息' + err)
+              })
+            }else{
+             this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lng},${lat}&output=json&pois=1 `).then(res => {
+                this.formatted_address = res.result.formatted_address
+                this.Grouping = {
+                  addressname: this.formatted_address,
+                  lng: item.lng,
+                  lat: item.lat,
+                  code: item.code,
+                  dataCount: item.dataCount,
+                  fixedCode: item.fixedCode,
+                  fixedName: item.fixedName,
+                  fixedStatus: item.fixedStatus,
+                  taskId: item.taskId,
+                  groupName: item.groupName,
+                  gtId: item.gtId,
+                  id: item.id,
+                  isNet: item.isNet,
+                  isTaskRange: item.isTaskRange,
+                  isTaskTime: item.isTaskTime,
+                  mac_num: item.mac_num,
+                  merchantId: item.merchantId,
+                  status: item.status,
+                  taskCode: item.taskCode,
+                  taskName: item.taskName
+                }
+                this.alltableData.push(this.Grouping)
+              }).catch((err) => {
+                console.log('错误信息' + err)
+              })
+            }
+          })
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    },
+    // 采集中
+    ywc () {
+      this.xz1 = false
+      this.xz = true
+      this.xz2 = false
+      this.xz3 = true
+      this.xz4 = true
+      this.xz5 = false
+      this.xz6 = true
+      this.xz7 = false
+      this.xz8 = true
+      this.xz9 = false
+      this.currentPage4 = 1
+      this.$http.get(`pc/device/list`, {        
+          params: {
+            size: this.sizes,
+            type: 1,
+          }      
+        }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+           this.alltableData = []
+           this.total = data.total
           data.content.forEach(item => {
              let lng = item.lng
             let lat = item.lat
@@ -582,67 +690,6 @@ export default {
         console.log('错误信息' + err)
       })
     },
-    // 采集中
-    ywc () {
-      this.xz1 = false
-      this.xz = true
-      this.xz2 = false
-      this.xz3 = true
-      this.xz4 = true
-      this.xz5 = false
-      this.xz6 = true
-      this.xz7 = false
-      this.xz8 = true
-      this.xz9 = false
-      this.$http.get(`pc/device/list`, {        params: {
-          size: this.sizes,
-          type: 1
-        }      }).then(res => {
-        var { code, data } = res.data
-        if (code === 1000) {
-          console.log(data)
-          data.content.forEach(item => {
-            let lng = item.lng
-            let lat = item.lat
-            this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lat},${lng}&output=json&pois=1 `).then(res => {
-              // console.log(res.result.formatted_address)
-              console.log(res)
-              this.formatted_address = res.result.formatted_address
-              this.Grouping = {
-                addressname: this.formatted_address,
-                lng: item.lng,
-                lat: item.lat,
-                code: item.code,
-                dataCount: item.dataCount,
-                fixedCode: item.fixedCode,
-                fixedName: item.fixedName,
-                fixedStatus: item.fixedStatus,
-                taskId: item.taskId,
-                groupName: item.groupName,
-                gtId: item.gtId,
-                id: item.id,
-                isNet: item.isNet,
-                isTaskRange: item.isTaskRange,
-                isTaskTime: item.isTaskTime,
-                mac_num: item.mac_num,
-                merchantId: item.merchantId,
-                status: item.status,
-                taskCode: item.taskCode,
-                taskName: item.taskName
-              }
-              this.alltableData.push(this.Grouping)
-            }).catch((err) => {
-              console.log('错误信息' + err)
-            })
-          })
-          this.total = data.total
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch((err) => {
-        console.log('错误信息' + err)
-      })
-    },
     // 待采集
     wwc () {
       this.xz1 = false
@@ -655,19 +702,61 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
-      this.$http.get(`pc/device/list`, {        params: {
-          size: this.sizes,
-          type: 2
-        }      }).then(res => {
+      this.currentPage4 = 1
+      this.$http.get(`pc/device/list`, {        
+          params: {
+            size: this.sizes,
+            type: 2
+          }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
+           this.alltableData = []
+           this.total = data.total
           data.content.forEach(item => {
-            let lng = item.lng
+             let lng = item.lng
             let lat = item.lat
-            this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lat},${lng}&output=json&pois=1 `).then(res => {
-              // console.log(res.result.formatted_address)
-              console.log(res)
-              this.formatted_address = res.result.formatted_address
+            if(lng!==null){
+              this.$jsonp(`http://api.map.baidu.com/geoconv/v1/?coords=${lng},${lat}&from=1&to=5&ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS`).then(res => {
+                console.log(res.result[0])
+                let reslat = res.result[0].y
+                let reslng = res.result[0].x
+                this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${reslat},${reslng}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                   this.formatted_address = res.result.formatted_address
+              this.Grouping = {
+                addressname: this.formatted_address,
+                lng: reslng,
+                lat: reslat,
+                code: item.code,
+                dataCount: item.dataCount,
+                fixedCode: item.fixedCode,
+                fixedName: item.fixedName,
+                fixedStatus: item.fixedStatus,
+                taskId: item.taskId,
+                groupName: item.groupName,
+                gtId: item.gtId,
+                id: item.id,
+                isNet: item.isNet,
+                isTaskRange: item.isTaskRange,
+                isTaskTime: item.isTaskTime,
+                mac_num: item.mac_num,
+                merchantId: item.merchantId,
+                status: item.status,
+                taskCode: item.taskCode,
+                taskName: item.taskName
+              }
+              this.alltableData.push(this.Grouping)
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+              }).catch(err => {
+                console.log('错误信息' + err)
+              })
+            }else{
+             this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lng},${lat}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                   this.formatted_address = res.result.formatted_address
               this.Grouping = {
                 addressname: this.formatted_address,
                 lng: item.lng,
@@ -691,11 +780,16 @@ export default {
                 taskName: item.taskName
               }
               this.alltableData.push(this.Grouping)
-            }).catch((err) => {
-              console.log('错误信息' + err)
-            })
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+            }
           })
-          this.total = data.total
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
         } else {
           this.$message.error(res.data.message);
         }
@@ -715,18 +809,60 @@ export default {
       this.xz7 = true
       this.xz8 = true
       this.xz9 = false
-      this.$http.get(`pc/device/list`, {        params: {
-          size: this.sizes,
-          type: 3
-        }      }).then(res => {
+      this.currentPage4 = 1
+      this.$http.get(`pc/device/list`, {        
+          params: {
+            size: this.sizes,
+            type: 3
+          }      
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
+           this.alltableData = []
+           this.total = data.total
           data.content.forEach(item => {
-            let lng = item.lng
+             let lng = item.lng
             let lat = item.lat
-            this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lat},${lng}&output=json&pois=1 `).then(res => {
-              // console.log(res.result.formatted_address)
-              console.log(res)
+            if(lng!==null){
+              this.$jsonp(`http://api.map.baidu.com/geoconv/v1/?coords=${lng},${lat}&from=1&to=5&ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS`).then(res => {
+                console.log(res.result[0])
+                let reslat = res.result[0].y
+                let reslng = res.result[0].x
+                this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${reslat},${reslng}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                   this.formatted_address = res.result.formatted_address
+              this.Grouping = {
+                addressname: this.formatted_address,
+                lng: reslng,
+                lat: reslat,
+                code: item.code,
+                dataCount: item.dataCount,
+                fixedCode: item.fixedCode,
+                fixedName: item.fixedName,
+                fixedStatus: item.fixedStatus,
+                taskId: item.taskId,
+                groupName: item.groupName,
+                gtId: item.gtId,
+                id: item.id,
+                isNet: item.isNet,
+                isTaskRange: item.isTaskRange,
+                isTaskTime: item.isTaskTime,
+                mac_num: item.mac_num,
+                merchantId: item.merchantId,
+                status: item.status,
+                taskCode: item.taskCode,
+                taskName: item.taskName
+              }
+              this.alltableData.push(this.Grouping)
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+              }).catch(err => {
+                console.log('错误信息' + err)
+              })
+            }else{
+             this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lng},${lat}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
               this.formatted_address = res.result.formatted_address
               this.Grouping = {
                 addressname: this.formatted_address,
@@ -751,11 +887,16 @@ export default {
                 taskName: item.taskName
               }
               this.alltableData.push(this.Grouping)
-            }).catch((err) => {
-              console.log('错误信息' + err)
-            })
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+            }
           })
-          this.total = data.total
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
         } else {
           this.$message.error(res.data.message);
         }
@@ -778,46 +919,341 @@ export default {
     },
     handleSizeChange (val) {
       this.sizes = val
-      this.$http.get(`pc/device/list`, {
-        params: {
-          size: val
+      if(this.xz1 === true){
+        this.$http.get(`pc/device/list`, {        
+          params: {
+            size: val,
+            type:0
+          }      
+        }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.alltableData = []
+          this.total = data.total
+          data.content.forEach(item => {
+            let lng = item.lng
+            let lat = item.lat
+            if(lng!==null){
+              this.$jsonp(`http://api.map.baidu.com/geoconv/v1/?coords=${lng},${lat}&from=1&to=5&ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS`).then(res => {
+                console.log(res.result[0])
+                let reslat = res.result[0].y
+                let reslng = res.result[0].x
+                this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${reslat},${reslng}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                  this.formatted_address = res.result.formatted_address
+                  this.Grouping = {
+                    addressname: this.formatted_address,
+                    lng: reslng,
+                    lat: reslat,
+                    code: item.code,
+                    dataCount: item.dataCount,
+                    fixedCode: item.fixedCode,
+                    fixedName: item.fixedName,
+                    fixedStatus: item.fixedStatus,
+                    taskId: item.taskId,
+                    groupName: item.groupName,
+                    gtId: item.gtId,
+                    id: item.id,
+                    isNet: item.isNet,
+                    isTaskRange: item.isTaskRange,
+                    isTaskTime: item.isTaskTime,
+                    mac_num: item.mac_num,
+                    merchantId: item.merchantId,
+                    status: item.status,
+                    taskCode: item.taskCode,
+                    taskName: item.taskName
+                  }
+                  this.alltableData.push(this.Grouping)
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+              }).catch(err => {
+                console.log('错误信息' + err)
+              })
+            }else{
+             this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lng},${lat}&output=json&pois=1 `).then(res => {
+                this.formatted_address = res.result.formatted_address
+                this.Grouping = {
+                  addressname: this.formatted_address,
+                  lng: item.lng,
+                  lat: item.lat,
+                  code: item.code,
+                  dataCount: item.dataCount,
+                  fixedCode: item.fixedCode,
+                  fixedName: item.fixedName,
+                  fixedStatus: item.fixedStatus,
+                  taskId: item.taskId,
+                  groupName: item.groupName,
+                  gtId: item.gtId,
+                  id: item.id,
+                  isNet: item.isNet,
+                  isTaskRange: item.isTaskRange,
+                  isTaskTime: item.isTaskTime,
+                  mac_num: item.mac_num,
+                  merchantId: item.merchantId,
+                  status: item.status,
+                  taskCode: item.taskCode,
+                  taskName: item.taskName
+                }
+                this.alltableData.push(this.Grouping)
+              }).catch((err) => {
+                console.log('错误信息' + err)
+              })
+            }
+          })
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+      }else if(this.xz3 === true){
+        this.$http.get(`pc/device/list`, {
+          params: {
+            size: val,
+            type:1
+          }
+        }).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            console.log(data)
+            this.alltableData = data.content
+            this.total = data.total
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch((err) => {
+          console.log('错误信息' + err)
+        })
+      }else if(this.xz5 === true){
+        this.$http.get(`pc/device/list`, {
+          params: {
+            size: val,
+            type:2
+          }
+        }).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            console.log(data)
+            this.alltableData = data.content
+            this.total = data.total
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch((err) => {
+          console.log('错误信息' + err)
+        })
+      }else if(this.xz7 === true){
+        this.$http.get(`pc/device/list`, {
+          params: {
+            size: val,
+            type:3
+          }
+        }).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            console.log(data)
+            this.alltableData = data.content
+            this.total = data.total
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch((err) => {
+          console.log('错误信息' + err)
+        })
+      }
+      
+    },
+    handleCurrentChange (val) {
+      this.pages = val
+      if(this.xz1 === true){
+         this.$http.get(`pc/device/list`, {        
+          params: {
+            size: this.sizes,
+            page: val - 1,
+            type:0
+          }      
+        }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.alltableData = []
+          this.total = data.total
+          data.content.forEach(item => {
+            let lng = item.lng
+            let lat = item.lat
+            if(lng!==null){
+              this.$jsonp(`http://api.map.baidu.com/geoconv/v1/?coords=${lng},${lat}&from=1&to=5&ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS`).then(res => {
+                console.log(res.result[0])
+                let reslat = res.result[0].y
+                let reslng = res.result[0].x
+                this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${reslat},${reslng}&output=json&pois=1 `).then(res => {
+                  // console.log(res.result)
+                  this.formatted_address = res.result.formatted_address
+                  this.Grouping = {
+                    addressname: this.formatted_address,
+                    lng: reslng,
+                    lat: reslat,
+                    code: item.code,
+                    dataCount: item.dataCount,
+                    fixedCode: item.fixedCode,
+                    fixedName: item.fixedName,
+                    fixedStatus: item.fixedStatus,
+                    taskId: item.taskId,
+                    groupName: item.groupName,
+                    gtId: item.gtId,
+                    id: item.id,
+                    isNet: item.isNet,
+                    isTaskRange: item.isTaskRange,
+                    isTaskTime: item.isTaskTime,
+                    mac_num: item.mac_num,
+                    merchantId: item.merchantId,
+                    status: item.status,
+                    taskCode: item.taskCode,
+                    taskName: item.taskName
+                  }
+                  this.alltableData.push(this.Grouping)
+                }).catch((err) => {
+                  console.log('错误信息' + err)
+                })
+              }).catch(err => {
+                console.log('错误信息' + err)
+              })
+            }else{
+             this.$jsonp(`http://api.map.baidu.com/geocoder/v2/?ak=1IGwblSXzAV0yxzCq0ZGdYoixoreCQwS&callback=renderReverse&location=${lng},${lat}&output=json&pois=1 `).then(res => {
+                this.formatted_address = res.result.formatted_address
+                this.Grouping = {
+                  addressname: this.formatted_address,
+                  lng: item.lng,
+                  lat: item.lat,
+                  code: item.code,
+                  dataCount: item.dataCount,
+                  fixedCode: item.fixedCode,
+                  fixedName: item.fixedName,
+                  fixedStatus: item.fixedStatus,
+                  taskId: item.taskId,
+                  groupName: item.groupName,
+                  gtId: item.gtId,
+                  id: item.id,
+                  isNet: item.isNet,
+                  isTaskRange: item.isTaskRange,
+                  isTaskTime: item.isTaskTime,
+                  mac_num: item.mac_num,
+                  merchantId: item.merchantId,
+                  status: item.status,
+                  taskCode: item.taskCode,
+                  taskName: item.taskName
+                }
+                this.alltableData.push(this.Grouping)
+              }).catch((err) => {
+                console.log('错误信息' + err)
+              })
+            }
+          })
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+      }else if(this.xz3 === true){
+        this.$http.get(`pc/device/list`,{
+        params:{
+          size: this.sizes,
+          page: val - 1,
+          type:1
         }
       }).then(res => {
         var { code, data } = res.data
-        if (code === 1000) {
-          console.log(data)
-          this.alltableData = data.content
-          this.total = data.total
-        } else if (code == 2001) {
-          this.$message.error(res.data.message);
-          window.sessionStorage.clear();
-          window.localStorage.clear();
-          this.$router.push('/')
-        } else {
-          this.$message.error(res.data.message);
+          if (code === 1000) {
+            console.log(data)
+            this.alltableData = data.content
+            this.total = data.total
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch((err) => {
+          console.log('错误信息' + err)
+        })
+      }else if(this.xz5 === true){
+        this.$http.get(`pc/device/list`,{
+        params:{
+          size: this.sizes,
+          page: val - 1,
+          type:2
         }
-      }).catch((err) => {
-        console.log('错误信息' + err)
-      })
-    },
-    handleCurrentChange (val) {
-      this.$http.get(`pc/device/list?size=${this.sizes}&page=${val - 1}`).then(res => {
+      }).then(res => {
         var { code, data } = res.data
-        if (code === 1000) {
-          console.log(data)
-          this.alltableData = data.content
-          this.total = data.total
-        } else if (code == 2001) {
-          this.$message.error(res.data.message);
-          window.sessionStorage.clear();
-          window.localStorage.clear();
-          this.$router.push('/')
-        } else {
-          this.$message.error(res.data.message);
+          if (code === 1000) {
+            console.log(data)
+            this.alltableData = data.content
+            this.total = data.total
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch((err) => {
+          console.log('错误信息' + err)
+        })
+      }else if(this.xz7 === true){
+        this.$http.get(`pc/device/list`,{
+        params:{
+          size: this.sizes,
+          page: val - 1,
+          type:3
         }
-      }).catch((err) => {
-        console.log('错误信息' + err)
-      })
+      }).then(res => {
+        var { code, data } = res.data
+          if (code === 1000) {
+            console.log(data)
+            this.alltableData = data.content
+            this.total = data.total
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch((err) => {
+          console.log('错误信息' + err)
+        })
+      }
+      
     },
     dj () {
       console.log('b')
@@ -838,6 +1274,7 @@ export default {
     },
     gb () {
       this.ikon = false
+      // this.reload()
     },
     sjxq (index, row) {
       this.$store.commit('myval1', this.btname)
@@ -917,7 +1354,7 @@ export default {
       // let info = new FormData()
       // info.append('deviceId', this.jbname)
       let info = {
-        'deviceId': this.jbname
+        'code': this.jbname
       }
       this.$http.post(`pc/device/untied`, info).then(res => {
         var { code, data } = res.data

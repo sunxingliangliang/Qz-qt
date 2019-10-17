@@ -111,8 +111,8 @@
           </li>
         </ul>
        
-        <p :class="$style.f_jz1" v-if="loading">加载中...</p>
-        <!-- <p :class="$style.f_jz" v-if="noMore">没有更多了</p> -->
+        <!-- <p :class="$style.f_jz1" v-if="loading">加载中...</p>
+        <p :class="$style.f_jz" v-if="loading">没有更多了</p> -->
       </div>
       <!-- 领取 -->
       <div v-show="xz3===true" class="infinite-list-wrapper">
@@ -278,7 +278,7 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage4"
+          :current-page.sync="currentPage4"
           :page-sizes="[9, 18, 27, 36]"
           :page-size="100"
           layout="total, sizes, prev, pager, next, jumper"
@@ -439,6 +439,7 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get('pc/platform/merchantPlatfrom',{
         params:{
           size: this.sizes,
@@ -473,6 +474,7 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
        this.$http.get('pc/platform/merchantPlatfrom',{params:{
           status:1,
           size: this.sizes,
@@ -507,6 +509,7 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
        this.$http.get('pc/platform/merchantPlatfrom',{
           params:{
             status:2,

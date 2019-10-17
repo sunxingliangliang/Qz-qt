@@ -49,7 +49,7 @@
       </el-row>
       <!-- 表格内容 -->
       <!-- 全部任务 -->
-      <div v-if="xz1===true">
+      <div v-show="xz1===true">
         <div :class="$style.f_bgnr">
           <el-table
             :data="datarevenue"
@@ -93,7 +93,7 @@
         </div>
       </div>
       <!-- 已完成 -->
-      <div v-if="xz3===true">
+      <div v-show="xz3===true">
         <div :class="$style.f_bgnr">
           <el-table
             :data="datarevenue"
@@ -137,7 +137,7 @@
         </div>
       </div>
       <!-- 未完成 -->
-      <div v-if="xz5===true">
+      <div v-show="xz5===true">
         <div :class="$style.f_bgnr">
           <el-table
             :data="datarevenue"
@@ -185,7 +185,7 @@
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage4"
+          :current-page.sync="currentPage4"
           :page-sizes="[10, 20, 30, 40]"
           :page-size="10"
           layout="total, sizes, prev, pager, next, jumper"
@@ -235,7 +235,7 @@
           <el-pagination
             @size-change="handleSizeChange1"
             @current-change="handleCurrentChange1"
-            :current-page="currentPage4"
+            :current-page="currentPage5"
             :page-sizes="[100, 200, 300, 400]"
             :page-size="100"
             layout="total, sizes, prev, pager, next, jumper"
@@ -451,6 +451,7 @@ export default {
       datarevenue: [],
       datarevenue1: [],
       currentPage4: 1,
+      currentPage5: 1,
       sjxq1: false,
       value3: [],
       value2: [],
@@ -526,9 +527,9 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get(`pc/orderData/list`,{params:{
         size:this.sizes,
-        page:this.pages,
       }}).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
@@ -551,9 +552,9 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get(`pc/orderData/list`,{params:{
         size:this.sizes,
-        page:this.pages,
         tab:1
       }}).then(res => {
         var { code, data } = res.data
@@ -578,9 +579,9 @@ export default {
       this.xz7 = false
       this.xz8 = true
       this.xz9 = false
+      this.currentPage4 = 1
       this.$http.get(`pc/orderData/list`,{params:{
         size:this.sizes,
-        page:this.pages,
         tab:2
       }}).then(res => {
         var { code, data } = res.data
@@ -649,9 +650,11 @@ export default {
     },
     handleSizeChange (val) {
       this.sizes = val
-      this.$http.get(`pc/orderData/list?size=${val}`,{params:{
-        size:val,
-      }}).then(res => {
+      this.$http.get(`pc/orderData/list`,{
+        params:{
+          size:val,
+        }
+      }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.datarevenue = data.content
@@ -663,19 +666,55 @@ export default {
     },
     handleCurrentChange (val) {
       this.pages = val
-      this.$http.get(`pc/orderData/list?page=${val - 1}&size=${this.sizes}`,{params:{
-        page:val-1,
-        size:this.sizes
-      }}).then(res => {
-        var { code, data } = res.data
-        if (code === 1000) {
-          this.datarevenue = data.content
-          this.total = data.total
-        }
-      }).catch(function (err) {
-        console.log('错误信息' + err)
-      })
-      console.log(`当前页: ${val}`);
+      if(this.xz1 === true){
+        this.$http.get(`pc/orderData/list`,{
+          params:{
+            page:val-1,
+            size:this.sizes,
+          }
+        }).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            this.datarevenue = data.content
+            this.total = data.total
+          }
+        }).catch(function (err) {
+          console.log('错误信息' + err)
+        })
+      }else if(this.xz3 === true){
+        this.$http.get(`pc/orderData/list`,{
+          params:{
+            page:val-1,
+            size:this.sizes,
+            tab:1
+          }
+        }).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            this.datarevenue = data.content
+            this.total = data.total
+          }
+        }).catch(function (err) {
+          console.log('错误信息' + err)
+        })
+      }else if(this.xz5 === true){
+        this.$http.get(`pc/orderData/list`,{
+          params:{
+            page:val-1,
+            size:this.sizes,
+            tab:2
+          }
+        }).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            this.datarevenue = data.content
+            this.total = data.total
+          }
+        }).catch(function (err) {
+          console.log('错误信息' + err)
+        })
+      }
+      
     },
     handleSizeChange1 (val) {
       console.log(`每页 ${val} 条`);

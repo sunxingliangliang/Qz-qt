@@ -79,8 +79,8 @@
             <el-table-column prop="province" align="center" label="代理区域" width="120"></el-table-column>
             <el-table-column prop="proxy_type" align="center" label="类型" width="120">
               <template slot-scope="scope">
-                <span v-if="scope.row.proxy_type===2">市级运营中心</span>
                 <span v-if="scope.row.proxy_type===1">省级运营中心</span>
+                <span v-if="scope.row.proxy_type===2">市级运营中心</span>
                 <span v-if="scope.row.proxy_type===3">市级一般代理商</span>
               </template>
             </el-table-column>
