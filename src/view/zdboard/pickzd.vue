@@ -348,7 +348,7 @@
     </div>
     <!-- 地图 -->
     <div class="f_dg">
-      <el-dialog title="场景地点" :visible.sync="ikon" width="30%" :before-close="gb">
+      <el-dialog v-if="hackReset" title="场景地点" :visible.sync="ikon" width="30%" :before-close="gb">
         <baidu-map class="map" style="height:300px" :center="center" :zoom="18">
           <bm-marker :position="center" :dragging="true" @click="infoWindowOpen">
             <bm-info-window
@@ -429,7 +429,8 @@ export default {
       show: true,
       addressname: '',
       row:{},
-      index:''
+      index:'',
+      hackReset:true
     }
   },
   mounted () {
@@ -1259,6 +1260,7 @@ export default {
       console.log('b')
     },
     place (row) {
+      this.show = true
       this.center = {
         lat: Number(row.lat),
         lng: Number(row.lng)
@@ -1273,8 +1275,12 @@ export default {
       this.show = true
     },
     gb () {
+      this.hackReset = false
+      this.$nextTick(() => {
+        this.hackReset = true
+      })
+      this.center = {}
       this.ikon = false
-      // this.reload()
     },
     sjxq (index, row) {
       this.$store.commit('myval1', this.btname)
@@ -1336,8 +1342,8 @@ export default {
           // console.log(data.error.length)
           // this.qb()
           // this.total++
-          this.shuaxin()
           this.bangding = false
+          this.shuaxin() 
           // this.$set(this.alltableData)
         } else {
           this.$message.error(res.data.message);

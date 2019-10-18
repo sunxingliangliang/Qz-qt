@@ -65,7 +65,7 @@
       <div
         :class="$style.f_btn"
         @click="cjrw"
-        style="float: right; vertical-align: top; margin: 30px 0; margin-right: 26px; margin-bottom: 10px;"
+        style="float: right; vertical-align: top; margin: 80px -12px; margin-right: 21px; margin-bottom: 0px;"
       >创建任务</div>
       <div :class="$style.f_row">
         <div :class="{'f_fy':xz,'f_fy1':xz1}" @click="qb">全部</div>
@@ -709,7 +709,7 @@
             <el-pagination
               @size-change="handleSizeChange1"
               @current-change="handleCurrentChange1"
-              :current-page="currentPage5"
+              :current-page.sync="currentPage5"
               :page-sizes="[10, 20, 30, 40]"
               :page-size="10"
               layout="total, sizes, prev, pager, next, jumper"
@@ -898,7 +898,7 @@
           v-model="textarea2"
         ></el-input>
         <span slot="footer" class="dialog-footer">
-          <span @click="cancel" style="display: inline-block;" :class="$style.f_btn">取消</span>
+          <span @click="dgdata = false" style="display: inline-block;" :class="$style.f_btn">取消</span>
           <span @click="queding" style="display: inline-block;" :class="$style.f_btn">提交</span>
         </span>
       </el-dialog>
@@ -1765,10 +1765,10 @@ export default {
       console.log(this.searchId)
       let ids = this.searchId.join(',')
       console.log(ids)
-      // let info = new FormData()
-      // info.append('ids', ids)
-      // info.append('type', 2)
-      let info = {
+      if(ids === ''){
+        this.$message.error('请先选择需要订购的画像')
+      }else{
+         let info = {
         'ids': ids,
         'type': 2
       }
@@ -1791,67 +1791,73 @@ export default {
         console.log('错误信息' + err)
       })
       this.ikon = true
+      }
     },
     // 订购数据
     orderdata () {
-      this.dgdata = true
       let ids = this.searchId.join(',')
-      this.$http.get('modules/media/all').then(res => {
-        var { code, data } = res.data
-        if (code === 1000) {
-          this.media = data
-        } else if (code == 2001) {
-          this.$message.error(res.data.message);
-          window.sessionStorage.clear();
-          window.localStorage.clear();
-          this.$router.push('/')
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch(function (err) {
-        console.log('错误信息' + err)
-      })
-      this.$http.get('pc/order/yzSign').then(res => {
-        var { code, data } = res.data
-        if (code === 1000) {
-          this.career = data.occupation
-          this.sex = data.gender
-          this.agebin = data.agebin
-        } else if (code == 2001) {
-          this.$message.error(res.data.message);
-          window.sessionStorage.clear();
-          window.localStorage.clear();
-          this.$router.push('/')
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch(function (err) {
-        console.log('错误信息' + err)
-      })
-      this.$http.post(`pc/task/orderInit`, { 'ids': ids, 'type': 1 }).then(res => {
-        var { code, data } = res.data
-        if (code === 1000) {
-          console.log(data)
-          if (data.dataCount === 0) {
-            this.$message.error('源数据量为0无法订购');
+      if(ids === ''){
+        this.$message.error('请先选择需要订购的数据')
+      }else{
+        this.dgdata = true
+        this.$http.get('modules/media/all').then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            this.media = data
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
           } else {
-            this.mediaAccountList = data.mediaAccountList
-            this.formname = data.name
-            this.ysjl1 = data.dataCount
-            this.dataPrice = data.dataPrice
-            this.mappingPrice = data.mappingPrice
+            this.$message.error(res.data.message);
           }
-        } else if (code == 2001) {
-          this.$message.error(res.data.message);
-          window.sessionStorage.clear();
-          window.localStorage.clear();
-          this.$router.push('/')
-        } else {
-          this.$message.error(res.data.message);
-        }
-      }).catch(function (err) {
-        console.log('错误信息' + err)
-      })
+        }).catch(function (err) {
+          console.log('错误信息' + err)
+        })
+        this.$http.get('pc/order/yzSign').then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            this.career = data.occupation
+            this.sex = data.gender
+            this.agebin = data.agebin
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch(function (err) {
+          console.log('错误信息' + err)
+        })
+        this.$http.post(`pc/task/orderInit`, { 'ids': ids, 'type': 1 }).then(res => {
+          var { code, data } = res.data
+          if (code === 1000) {
+            console.log(data)
+            if (data.dataCount === 0) {
+              this.$message.error('源数据量为0无法订购');
+            } else {
+              this.mediaAccountList = data.mediaAccountList
+              this.formname = data.name
+              this.ysjl1 = data.dataCount
+              this.dataPrice = data.dataPrice
+              this.mappingPrice = data.mappingPrice
+            }
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch(function (err) {
+          console.log('错误信息' + err)
+        })
+      }
+     
     },
     // 计算金额
     cipher () {
@@ -1959,9 +1965,10 @@ export default {
       // console.log(row.id)
       this.taskId = row.id
       let endstr = ''
+      this.currentPage5 = 1
       this.$http.get(`pc/data/list`,{params:{
         taskId:this.taskId,
-        size:10
+        size:10,
       }}).then(res => {
         var { code, data } = res.data
         if (code == 1000) {
@@ -2352,6 +2359,8 @@ export default {
       this.user = ''
       this.password = ''
       this.textarea2 = ''
+      // this.ikon = false
+      this.dgdata = true
     }
     // point (index, row) {
     //   console.log(index, row)
@@ -2482,8 +2491,8 @@ export default {
 
   .f_bgnr {
     padding-top: 39px;
-    padding-left: 34px;
-    padding-right: 34px;
+    padding-left: 22px;
+    padding-right: 22px;
   }
   .f_fy {
     float: right;
