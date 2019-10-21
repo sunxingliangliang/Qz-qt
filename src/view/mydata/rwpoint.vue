@@ -417,9 +417,11 @@ export default {
         }).catch(function (err) {
           console.log('错误信息' + err)
         })
-        this.$http.get(`pc/group/findDevicesByGroup`, {          params: {
-            groupId: this.selectedOptions[0][0]
-          }        }).then(res => {
+        this.$http.get(`pc/group/findDevicesByGroup`, {          
+            params: {
+              groupId: this.selectedOptions[0][0]
+            }        
+          }).then(res => {
           var { code, data } = res.data
           if (code === 1000) {
             data.forEach(item => {

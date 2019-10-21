@@ -111,8 +111,8 @@
           </li>
         </ul>
        
-        <!-- <p :class="$style.f_jz1" v-if="loading">加载中...</p>
-        <p :class="$style.f_jz" v-if="loading">没有更多了</p> -->
+        <p :class="$style.f_jz1" v-if="loading">加载中...</p>
+        <p :class="$style.f_jz" v-if="noMore">没有更多了</p>
       </div>
       <!-- 领取 -->
       <div v-show="xz3===true" class="infinite-list-wrapper">

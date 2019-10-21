@@ -1088,7 +1088,7 @@ export default {
     handleCurrentChange (val) {
       this.pages = val
       if(this.xz1 === true){
-         this.$http.get(`pc/device/list`, {        
+         this.$http.get(`pc/device/list`, {
           params: {
             size: this.sizes,
             page: val - 1,

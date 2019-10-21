@@ -77,6 +77,7 @@
           <div :class="$style.f_btn" @click="orderikion">订购画像</div>
           <div :class="$style.f_btn" @click="orderdata">订购数据</div>
         </div>
+          <div :class="$style.f_btns" @click="complementary">确权补充机制</div>
       </div>
       <!-- <router-view></router-view> -->
       <!-- 全部 -->
@@ -1091,7 +1092,8 @@ export default {
       ysjl1: '',
       dataPrice: null,
       mappingPrice: null,
-      refer: false
+      refer: false,
+      list:null
     }
   },
   mounted () {
@@ -1859,6 +1861,36 @@ export default {
       }
      
     },
+    //确权补充机制
+    complementary(){
+      if(this.ids === ''){
+        this.$message.error('请选择要确权的补充机制')
+      }else{
+          let info = {
+          ids:this.id,
+        // list:this.list
+      }
+      this.$http.post(`pc/task/restData`,info).then(res => {
+        var { code, data } = res.data
+          if (code === 1000) {
+            this.$message({
+              message: '添加成功',
+              type: 'success'
+            });
+          } else if (code == 2001) {
+            this.$message.error(res.data.message);
+            window.sessionStorage.clear();
+            window.localStorage.clear();
+            this.$router.push('/')
+          } else {
+            this.$message.error(res.data.message);
+          }
+        }).catch((err) => {
+          console.log('错误信息' + err)
+        })
+      }
+     
+    },
     // 计算金额
     cipher () {
       if (this.ysjl1 < this.buyAmount) {
@@ -2559,7 +2591,28 @@ export default {
   letter-spacing: 0;
   cursor: pointer;
 }
+.f_btns{
+  display: inline-block;
+  width: 95px;
+  height: 36px;
+  line-height: 36px;
+  background: #d9b4fa;
+  border: 1px solid #9013fe;
+  color: #5800a0;
+  border-radius: 4px;
+  margin-right: 10px;
+  text-align: center;
+  font-size: 14px;
+  letter-spacing: 0;
+  cursor: pointer;
+  margin-left: 50px;
+}
 .f_btn:hover {
+  background: #9013fe;
+  color: #fff;
+  border: 1px solid #9013fe;
+}
+.f_btns:hover{
   background: #9013fe;
   color: #fff;
   border: 1px solid #9013fe;
