@@ -1,7 +1,8 @@
 <template>
   <div>
     <el-row style="margin-top:20px;">
-      <el-button :class="$style.f_btn" style="float:left;margin-left:20px;" size="medium">导出报表</el-button>
+      <!-- <el-button :class="$style.f_btn" style="float:left;margin-left:20px;" size="medium">导出报表</el-button> -->
+        <div class="daochu"  @click="exportc" style="display: inline;float:left;margin-left:20px;width:100px;height:45px;line-height:45px;background:#d9b4fa;border-radius: 5px;color:#fff;cursor: pointer;">导出图表</div>
       <div style="float: right; margin-right: 20px;">
         <el-date-picker
           v-model="value1"
@@ -16,23 +17,23 @@
     </el-row>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc}}</span>
-      <div id="myChart9" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart9" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc1}}</span>
-      <div id="myChart10" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart10" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc2}}</span>
-      <div id="myChart11" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart11" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc3}}</span>
-      <div id="myChart12" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart12" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc4}}</span>
-      <div id="myChart13" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart13" style="position: static; width:100%;height:300px;"></div>
     </div>
     <br>
     <div :class="$style.f_hx3">
@@ -90,8 +91,14 @@ export default {
   mounted () {
     this.id = this.$store.state.id
     this.getList()
+    this.settime()
   },
   methods: {
+    settime(){//当前日期
+       let Time = new Date();
+       Time.getTime() - 3600 * 1000 * 24;
+       this.value1= [Time,Time]
+     },
     getList () {
       this.$http.get(`pc/fixedPortrait/selectCatering`,{params:{
         taskId:this.id
@@ -152,6 +159,41 @@ export default {
         console.log('错误信息' + err)
       })
     },
+    exportc(){
+      this.$http.get(`pc/fixedPortrait/exportCatering`,{params:{
+        taskId:this.id,
+        'dateStr4Start': this.value1[0],
+        'dateStr4end': this.value1[1]
+      }}).then(res => {
+                                 let filePath = res.data.data.path
+        let fileName = res.data.data.fileName
+        window.location.href =  `http://47.105.207.228:8874/pc/fixedPortrait/export/fixed?filePath=${filePath}&fileName=${fileName}`
+
+        var { code, data } = res.data
+        if (code === 1000) {
+          console.log(data)
+          this.drawLine9(data);
+          this.drawLine10(data);
+          this.drawLine11(data);
+          this.drawLine12(data);
+          this.drawLine13(data);
+          this.drawLine17(data);
+          this.drawLine18(data);
+          this.drawLine19(data);
+          this.drawLine20(data);
+          this.drawLine21(data);
+          this.drawLine22(data);
+          this.drawLine23(data);
+          this.drawLine24(data);
+          this.drawLine25(data);
+          this.drawLine26(data);
+          this.drawLine27(data);
+          this.drawLine28(data);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    },
     drawLine9 (data) {
       let price = []
       data.price.forEach(item => {
@@ -162,7 +204,7 @@ export default {
         color: ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -179,8 +221,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -192,7 +235,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.price
@@ -211,7 +257,7 @@ export default {
         color: ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -228,8 +274,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -241,7 +288,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.diningHabits
@@ -260,7 +310,7 @@ export default {
         color: ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -277,8 +327,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -290,7 +341,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.catering
@@ -309,7 +363,7 @@ export default {
         color: ['#0079FE', '#41E0FC', '#B8E986', '#FB745B', '#8C99AD', '#9013FE', '#53237E', '#F6D707', '#0079FE'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -326,8 +380,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -339,7 +394,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.Eat_Out
@@ -358,7 +416,7 @@ export default {
         color: ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -375,8 +433,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -388,7 +447,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.Eat_Home
@@ -412,6 +474,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -517,6 +580,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -598,6 +662,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -679,6 +744,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -760,6 +826,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -841,6 +908,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -922,6 +990,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -1003,6 +1072,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -1084,6 +1154,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -1134,7 +1205,7 @@ export default {
               normal: {
                 //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                 color: function (params) {
-                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
+                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A','#1786ba','#17ba99','#32ba17','#a9ba17','#ba9217','#ba2617','#d923e4','#b54366','#8c43b5','#696cf1','#f1696f']; //每根柱子的颜色
                   return colorList[params.dataIndex];
                 }
               },
@@ -1165,6 +1236,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -1246,6 +1318,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -1327,6 +1400,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }

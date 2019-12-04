@@ -8,6 +8,7 @@
           <img src="../assets/img/PNG-万加链-CN2.png" alt :class="$style.f_lo">
           <span :class="$style.f_zl">战略合作伙伴</span>
         </div>
+        <!-- {{name.name}} -->
         <div style="display: inline-block;float: left; margin-left: 8%;">
           <el-menu
             default-active="0"
@@ -44,7 +45,7 @@
                 >{{link.name}}</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-menu-item index="/index/agent.vue" @click="xjdl" v-if="proxyType===1||proxyType===2||proxyType===6">下级代理商</el-menu-item>
+            <el-menu-item index="/index/agent.vue" @click="xjdl" v-if="proxyType===1||proxyType===2||proxyType===6||proxyType===3">下级代理商</el-menu-item>
           </el-menu>
         </div>
         <div style="display: inline-block; vertical-align: top; float:right;margin-right:30px;">
@@ -122,6 +123,7 @@ export default {
           ]        }
       ],
       list: JSON.parse(window.sessionStorage.getItem('data')),
+      // name:JSON.parse(window.localStorage.getItem('vuex.userinfo.merchant')),
       activeIndex: '1',
       num: 0,
       heji: '≈3000.0CNY',
@@ -244,7 +246,7 @@ export default {
 <style lang='scss' module>
 .f_logo {
   display: inline-block;
-  float: left;
+  float:left;
   margin-left: 20px;
   .f_u {
     // width: 120px;

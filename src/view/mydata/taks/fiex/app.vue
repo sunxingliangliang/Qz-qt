@@ -1,7 +1,8 @@
 <template>
   <div>
     <el-row style="margin-top:20px;">
-      <el-button :class="$style.f_btn" style="float:left;margin-left:20px;" size="medium">导出报表</el-button>
+      <!-- <el-button :class="$style.f_btn" style="float:left;margin-left:20px;" size="medium">导出报表</el-button> -->
+        <div class="daochu"  @click="exportc" style="display: inline;float:left;margin-left:20px;width:100px;height:45px;line-height:45px;background:#d9b4fa;border-radius: 5px;color:#fff;cursor: pointer;">导出图表</div>
       <div style="float: right; margin-right: 20px;">
         <el-date-picker
           v-model="value1"
@@ -30,7 +31,7 @@
         <el-table-column prop="index1" align="center" label="TGI"></el-table-column>
       </el-table>
     </div>
-    <div style="text-align: right;margin-top:20px;padding-bottom: 20px;padding-right:10px;">
+    <!-- <div style="text-align: right;margin-top:20px;padding-bottom: 20px;padding-right:10px;">
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -40,7 +41,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="400"
       ></el-pagination>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -65,8 +66,14 @@ export default {
   mounted () {
     this.id = this.$store.state.id
     this.getList()
+    this.settime()
   },
   methods: {
+    settime(){//当前日期
+       let Time = new Date();
+       Time.getTime() - 3600 * 1000 * 24;
+       this.value1= [Time,Time]
+     },
     getList () {
         this.$http.get(`pc/fixedPortrait/selectAppinfo`,{
           params:{
@@ -89,6 +96,26 @@ export default {
           'dateStr4end': this.value1[1]
         }
       }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.tableData1 = data
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    },
+    exportc(){
+       this.$http.get(`pc/fixedPortrait/exportAppinfo`,{
+          params:{
+          taskId:this.id,
+          'dateStr4Start': this.value1[0],
+          'dateStr4end': this.value1[1]
+        }
+      }).then(res => {
+         let filePath = res.data.data.path
+        let fileName = res.data.data.fileName
+        // console.log(res.res.filePath)
+        window.location.href =  `http://47.105.207.228:8874/pc/fixedPortrait/export/fixed?filePath=${filePath}&fileName=${fileName}`
         var { code, data } = res.data
         if (code === 1000) {
           this.tableData1 = data

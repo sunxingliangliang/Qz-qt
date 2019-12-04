@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.f_fz">
     <div class="f_background">
-      <div :class="$style.f_s" v-if="proxyType===2">
+      <div :class="$style.f_s" v-if="proxyType===1">
         <el-card shadow="always" :class="$style.f_kp">
           <div :class="$style.f_icon">
             <i class="iconfont icondailishangguanli"></i>
@@ -23,18 +23,7 @@
           </div>
         </el-card>
       </div>
-      <!-- <div :class="$style.f_s6">
-        <el-card shadow="always" :class="$style.f_kp">
-          <div :class="$style.f_icon">
-            <i class="iconfont iconyunying"></i>
-          </div>
-          <div :class="$style.f_sjvkt">
-            <p :class="$style.numvkt">{{vkt}}</p>
-            <p :class="$style.f_sjfw">省级运营中心</p>
-          </div>
-        </el-card>
-      </div> -->
-      <div :class="$style.f_s6" v-if="proxyType===1">
+      <div :class="$style.f_s6" v-if="proxyType===1||proxyType===6||proxyType===2">
         <el-card shadow="always" :class="$style.f_kp" >
           <div :class="$style.f_icon">
             <i class="iconfont icondaili"></i>
@@ -45,7 +34,7 @@
           </div>
         </el-card>
       </div>
-      <div :class="$style.f_s6"  v-if="proxyType===1||proxyType===2">
+      <div :class="$style.f_s6"  v-if="proxyType===1||proxyType===2||proxyType===6">
         <el-card shadow="always" :class="$style.f_kp">
           <div :class="$style.f_icon">
             <i class="iconfont icondaili"></i>
@@ -62,24 +51,38 @@
       <p>代理商列表</p>
       <el-row :class="$style.f_row">
         <div :class="{'f_fy4':xz,'f_fy5':xz1}" style="margin-left:15px" @click="qb">全部</div>
-        <div :class="{'f_fy4':xz4,'f_fy5':xz5}" @click="sj">省级运营中心</div>
+        <div :class="{'f_fy4':xz4,'f_fy5':xz5}" @click="sj">合资公司</div>
         <div :class="{'f_fy4':xz6,'f_fy5':xz7}" @click="sj1">市级运营中心</div>
         <div :class="{'f_fy4':xz8,'f_fy5':xz9}" @click="yb">一般代理</div>
+        <el-button @click="lowertasks" style="margin-left:100px">下级任务列表</el-button>
+        <el-button @click="lowerend">下级终端设备</el-button>
         <div style="display: inline-block; float:right;">
           <el-input placeholder="请输入搜索内容" v-model="searchcontent" :class="$style.f_inpt" clearable></el-input>
           <el-button plain @click="demand" :class="$style.f_chaxun">查询</el-button>
         </div>
       </el-row>
       <!-- 表格内容 -->
+      <!-- <div>下级任务列表</div> -->
+     
       <!-- 全部任务 -->
       <div v-if="xz1===true">
+        <!-- <el-button @click="fanhui">返回上一级</el-button> -->
+        <el-button type="danger" plain @click="fanhui" style="margin-left:32px;margin-top:10px">返回上一级</el-button>
         <div :class="$style.f_bgnr">
           <el-table :data="tableData" style="width: 100%" border>
-            <el-table-column prop="name" align="center" label="代理商名称" sortable></el-table-column>
+            <!-- <el-table-column prop="name" align="center" label="代理商名称" sortable></el-table-column> -->
+            <el-table-column label="客户名称" sortable align="center">
+              <template slot-scope="scope">
+                <div 
+                @click="khname(scope.$index, scope.row)"
+                :class="$style.f_point"
+                >{{scope.row.name}}</div>
+              </template>
+            </el-table-column>
             <el-table-column prop="province" align="center" label="代理区域" width="120"></el-table-column>
             <el-table-column prop="proxy_type" align="center" label="类型" width="120">
               <template slot-scope="scope">
-                <span v-if="scope.row.proxy_type===1">省级运营中心</span>
+                <span v-if="scope.row.proxy_type===6">合资公司</span>
                 <span v-if="scope.row.proxy_type===2">市级运营中心</span>
                 <span v-if="scope.row.proxy_type===3">市级一般代理商</span>
               </template>
@@ -94,14 +97,16 @@
           </el-table>
         </div>
       </div>
-      <!--  省级运营中心 -->
+      <!--  合资公司 -->
       <div v-if="xz5===true">
+        <el-button type="danger" plain @click="fanhuihezi" style="margin-left:32px;margin-top:10px">返回上一级</el-button>
         <div :class="$style.f_bgnr">
           <el-table :data="tableData" style="width: 100%" border>
             <el-table-column prop="name" align="center" label="代理商名称" sortable></el-table-column>
             <el-table-column prop="province" align="center" label="代理区域" width="120"></el-table-column>
             <el-table-column prop="proxy_type" align="center" label="类型" width="120">
               <template slot-scope="scope">
+                <span v-if="scope.row.proxy_type===6">合资公司</span>
                 <span v-if="scope.row.proxy_type===2">市级运营中心</span>
                 <span v-if="scope.row.proxy_type===3">市级一般代理商</span>
               </template>
@@ -118,6 +123,7 @@
       </div>
       <!--  市级运营中心 -->
       <div v-if="xz7===true">
+        <el-button type="danger" plain @click="fanhuishiji" style="margin-left:32px;margin-top:10px">返回上一级</el-button>
         <div :class="$style.f_bgnr">
           <el-table :data="tableData" style="width: 100%" border>
             <el-table-column prop="name" align="center" label="代理商名称" sortable></el-table-column>
@@ -140,6 +146,7 @@
       </div>
       <!-- 一般代理 -->
       <div v-if="xz9===true">
+        <el-button type="danger" plain @click="fanhuiyiban" style="margin-left:32px;margin-top:10px">返回上一级</el-button>
         <div :class="$style.f_bgnr">
           <el-table :data="tableData" style="width: 100%" border>
             <el-table-column prop="name" align="center" label="代理商名称" sortable></el-table-column>
@@ -192,6 +199,7 @@ export default {
       num2: 500,
       num3: 500,
       num4: 500,
+      dialogFormVisible: false,
       input: '',
       value1: '',
       xz: false,
@@ -253,6 +261,7 @@ export default {
       total: null,
       sizes: 10,
       pages: 0,
+      id:'',
       shi:"",
       yiban:'',
       proxyType:null,
@@ -263,9 +272,17 @@ export default {
   mounted () {
     this.qb()
     this.getCount()
+    // this.khname()
     this.proxyType = this.$store.state.userinfo.merchant.proxyType
   },
   methods: {
+    lowertasks(){
+      // this.$router.push('/index/lowerTasks.vue)
+      this.$router.push('/index/lowerTasks.vue')
+    },
+    lowerend(){
+      this.$router.push('/index/lowerend.vue')
+    },
     getCount () {
       this.$http.get(`pc/merchant/followerCount`).then(res => {
         var { code, data } = res.data
@@ -279,6 +296,145 @@ export default {
       }).catch(err => {
         console.log('错误信息' + err)
       })
+    },
+    //返回全部
+    fanhui(){
+      this.xz1 = true
+      this.xz = false
+      this.xz2 = true
+      this.xz3 = false
+      this.xz4 = true
+      this.xz5 = false
+      this.xz6 = true
+      this.xz7 = false
+      this.xz8 = true
+      this.xz9 = false
+      this.$http.get(`pc/merchant/followerList`, {        params: {
+          size: this.sizes,
+          page: this.pages,
+        }      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.tableData = data.content
+          this.total = data.total
+          this.tableData.forEach(item => {
+            item.date = item.from_date + '至' + item.to_date
+          })
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    },
+    //返回合资
+    fanhuihezi(){
+      this.xz1 = false
+      this.xz = true
+      this.xz2 = true
+      this.xz3 = false
+      this.xz4 = false
+      this.xz5 = true
+      this.xz6 = true
+      this.xz7 = false
+      this.xz8 = true
+      this.xz9 = false
+      console.log(1)
+      this.$http.get(`pc/merchant/followerList`, {        params: {
+          size: this.sizes,
+          page: this.pages,
+          proxyType: 6
+        }      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.tableData = data.content
+          this.total = data.total
+          this.tableData.forEach(item => {
+            item.date = item.from_date + '至' + item.to_date
+          })
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    },
+    //返回市级运营中心
+    fanhuishiji(){
+      this.xz1 = false
+      this.xz = true
+      this.xz2 = true
+      this.xz3 = false
+      this.xz4 = true
+      this.xz5 = false
+      this.xz6 = false
+      this.xz7 = true
+      this.xz8 = true
+      this.xz9 = false
+      this.$http.get(`pc/merchant/followerList`, {        params: {
+          size: this.sizes,
+          page: this.pages,
+          proxyType: 2
+        }      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.tableData = data.content
+          this.total = data.total
+          this.tableData.forEach(item => {
+            item.date = item.from_date + '至' + item.to_date
+          })
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    },
+    //返回一般
+    fanhuiyiban(){
+      this.xz1 = false
+      this.xz = true
+      this.xz2 = true
+      this.xz3 = false
+      this.xz4 = true
+      this.xz5 = false
+      this.xz6 = true
+      this.xz7 = false
+      this.xz8 = false
+      this.xz9 = true
+      this.$http.get(`pc/merchant/followerList`, {        params: {
+          size: this.sizes,
+          page: this.pages,
+          proxyType: 3
+        }      }).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.tableData = data.content
+          this.total = data.total
+          this.num4 = data.total
+          this.tableData.forEach(item => {
+            item.date = item.from_date + '至' + item.to_date
+          })
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    },
+    khname(index,row){
+      // this.$router.push('/index/allLowerend.vue')
+      this.$http.get(`pc/merchant/followerList`, {        
+        params: {
+          parentId:row.id,
+          }      
+        }).then(res => {
+          var { code, data } = res.data
+        if (code === 1000) {
+          this.tableData = data.content
+          this.total = data.total
+          this.tableData.forEach(item => {
+            item.date = item.from_date + '至' + item.to_date
+          })
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+      // let id = row.id
+      // console.log(id)
+      // this.$router.push({ path: '/index/allLowerend.vue', query: { id: id } })
     },
     format (percentage) {
       return percentage === 100 ? '' : ``;
@@ -315,7 +471,7 @@ export default {
         console.log('错误信息' + err)
       })
     },
-    // 省级运营中心
+    // 合资公司
     sj () {
       this.xz1 = false
       this.xz = true
@@ -331,7 +487,7 @@ export default {
       this.$http.get(`pc/merchant/followerList`, {        params: {
           size: this.sizes,
           page: this.pages,
-          proxyType: 1
+          proxyType: 6
         }      }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
@@ -772,7 +928,7 @@ export default {
     }
 
     .f_bgnr {
-      padding-top: 39px;
+      padding-top: 20px;
       padding-left: 34px;
       padding-right: 34px;
     }

@@ -1396,24 +1396,14 @@ export default {
       let provide = this.oneself.join(',')
       let city = this.city.join(',')
       let area = this.area.join(',')
-      // let info = new FormData()
-      // info.append('province', provide,)
-      // info.append('city', city,)
-      // info.append('area', area)
       let info = {
         'province': provide,
         'city': city,
-        'area': area
+        'area': area,
+        // 'signCrowd': '学生'
+
       }
-      // this.$http.post(`modules/scencesName/findScence`,info).then(res=>{
-      //   var {code,data}=res.data
-      //   if(code === 1000){
-      //     console.log(data)
-      //   }
-      // }).catch((err)=>{
-      //   console.log('错误信息'+err)
-      // })
-      this.$http.post(`modules/scencesName/findScence`, { 'province': provide, 'city': city, 'area': area }).then(res => {
+      this.$http.post(`modules/scencesName/findScence`,info).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.ScenesName = data
@@ -1439,7 +1429,8 @@ export default {
       console.log(ids)
       this.$http.get(`pc/collect/getCrowdByScencesName`, {        params: {
           scencesNameId: ids
-        }      }).then(res => {
+        }     
+        }).then(res => {
         var { code, data } = res.data
         if (code === 1000) {
           this.Crowdlabel = data
@@ -1845,27 +1836,6 @@ export default {
           generals.push(item[1])
         })
         type = '区域数据'
-        // let info = new FormData()
-        // info.append('province', this.oneself.join(','),)
-        // // info.append('province', 22)
-        // info.append('city', this.city.join(','),)
-        // // info.append('city', 284)
-        // info.append('area', this.area.join(','),)
-        // // info.append('area', 2344)
-        // info.append('collectType', this.datastamp,)
-        // info.append('scenceName', this.changjingmingcheng[0],)
-        // // info.append('scenceName', 6)
-        // info.append('regionParent', general.join(','),)
-        // // info.append('regionParent', 2)
-        // info.append('region', generals.join(','),)
-        // // info.append('region', 4)
-        // info.append('regionTypeParent', twogeneral.join(','),)
-        // // info.append('regionTypeParent', 7)
-        // info.append('regionType', twogenerals.join(','),)
-        // // info.append('signCrowd', this.biaoqian,)
-        // info.append('signCrowd', 4)
-        // info.append('fromDate', this.valuedate[0],)
-        // info.append('toDate', this.valuedate[1])
         console.log(twogenerals.join(','))
         let info = {
           'province': this.oneself.join(','),
@@ -1944,27 +1914,6 @@ export default {
           twogeneral.push(item[0])
           twogenerals.push(item[1])
         })
-        // let info = new FormData()
-        // info.append('province', this.oneself.join(','),)
-        // // info.append('province', 22)
-        // info.append('city', this.city.join(','),)
-        // // info.append('city', 284)
-        // info.append('area', this.area.join(','),)
-        // // info.append('area', 2344)
-        // info.append('collectType', this.datastamp,)
-        // info.append('scenceName', this.changjingmingcheng[0],)
-        // // info.append('scenceName', 6)
-        // info.append('industryParent', general.join(','),)
-        // // info.append('industryParent', 2)
-        // info.append('industry', generals.join(','),)
-        // // info.append('industry', 4)
-        // info.append('industrytypeParent', twogeneral.join(','),)
-        // // info.append('industrytypeParent', 7)
-        // info.append('industrytype', twogenerals.join(','),)
-        // // info.append('industrytype', this.biaoqian,)
-        // info.append('signCrowd', 4)
-        // info.append('fromDate', this.valuedate[0],)
-        // info.append('toDate', this.valuedate[1])
         let info = {
           'province': this.oneself.join(','),
           'city': this.city.join(','),
@@ -1978,19 +1927,6 @@ export default {
           'industrytype': this.biaoqian.join(','),
           'fromDate': this.valuedate[0],
           'toDate': this.valuedate[1],
-
-          // 'province': this.oneself.join(','),
-          // 'city': this.city.join(','),
-          // 'area': this.area.join(','),
-          // 'collectType': this.datastamp,
-          // 'scenceName': this.changjingmingcheng[0],
-          // 'regionParent': general.join(','),
-          // 'region': generals.join(','),
-          // 'regionTypeParent': twogeneral.join(','),
-          // 'regionType': twogenerals.join(','),
-          // 'signCrowd': this.biaoqian.join(','),
-          // 'fromDate': this.valuedate[0],
-          // 'toDate': this.valuedate[1]
         }
         this.$http.post(`pc/data/getDataCount`, info).then(res => {
           var { code, data } = res.data
@@ -2048,52 +1984,80 @@ export default {
           console.log('错误信息' + err)
         })
       }
-      // this.$http.post('pc/data/getDataCount').then(res => {
-      //   var { code, data } = res.data
-      //   if (code === 1000) {
-      //     let arr1 = []
-      //     arr1.push(this.oneself, this.city, this.area)
-      //     var arr2 = arr1.join("\\");
-      //     let arr3 = []
-      //     let arr4 = []
-      //     if (this.adress1 === '') {
-      //       console.log(1)
-      //     } else {
-      //       arr3 = this.adress1.join("\\")
-      //     }
-      //     if (this.adress2 === '') {
-      //       console.log(1)
-      //     } else {
-      //       arr4 = this.adress2.join("\\")
-      //     }
-      //     let time1 = new Date(this.value1[0])
-      //     let time2 = new Date(this.value1[1])
-      //     var y = time1.getFullYear();
-      //     var M = time1.getMonth() + 1;
-      //     var d = time1.getDate();
-      //     var y1 = time2.getFullYear();
-      //     var M1 = time2.getMonth() + 1;
-      //     var d1 = time2.getDate();
-      //     let time3 = y + '-' + M + '-' + d
-      //     let time4 = y1 + '-' + M1 + '-' + d1
-      //     let time5 = time3 + '至' + time4
-      //     let arr = []
-      //     arr.push(arr2, this.datastamp, arr4, arr3, this.biaoqian, this.changjingmingcheng, time5)
-      //     let arr5 = arr.join('-')
-      //     var natwork = {
-      //       keyword: arr5,
-      //       searchId: data.searchId,
-      //       dataCount: data.dataCount
-      //     }
-      //     let tableData2 = []
-      //     tableData2.push(natwork)
-      //     this.$store.commit('myval1', this.btname)
-      //     this.$router.push({ path: '/index/cxjg.vue', query: { arr: tableData2 } })
-      //   }
-      // }).catch(function (err) {
-      //   console.log("连接错误" + err)
-      // })
-
+      let info = {
+          'fromDate': this.valuedate[0],
+          'toDate': this.valuedate[1],
+        }
+        this.$http.post(`pc/data/getDataCount`,info).then(res=>{
+          var { code, data } = res.data
+          if(code === 1000){
+            let arr5 = this.valuedate.join('\\')
+            let arr6 = []
+            arr6.push(this.scenesheading, this.crowdtab,this.valuedate[0],this.valuedate[1])
+            let arr7 = arr6.join('-')
+            var obj = {
+              name: arr7,
+              searchUUID: data.searchUUID,
+              dataCount: data.dataCount
+            }
+            this.$store.commit('myval1', this.btname)
+            this.$store.commit('myobj', obj)
+            this.$router.push({ path: '/index/cxjg.vue', query: { obj: obj, } })
+          }
+        })
+        let infos = {
+          'scenceName': this.changjingmingcheng[0],
+          'signCrowd': this.biaoqian.join(',')
+        }
+        this.$http.post(`pc/data/getDataCount`,infos).then(res=>{
+          var { code, data } = res.data
+          if(code === 1000){
+            let arr6 = []
+            arr6.push(this.scenesheading, this.crowdtab,this.valuedate[0],this.valuedate[1])
+            let arr7 = arr6.join('-')
+            var obj = {
+              name: arr7,
+              searchUUID: data.searchUUID,
+              dataCount: data.dataCount
+            }
+            this.$store.commit('myval1', this.btname)
+            this.$store.commit('myobj', obj)
+            this.$router.push({ path: '/index/cxjg.vue', query: { obj: obj, } })
+          }
+        })
+      let infosd = {
+        'province': this.oneself.join(','),
+        'city': this.city.join(','),
+        'area': this.area.join(','),
+      }
+      this.$http.post(`pc/data/getDataCount`,infosd).then(res=>{
+        var { code, data } = res.data
+          if(code === 1000){
+            let arr = []
+            arr.push(this.Provide.pop(), this.City,this.Area)
+            console.log(arr)
+            let arr2 = arr.join('\\')
+            let arr3 = []
+            if (this.districtcollection.length === 1 & this.districtcollections.length === 0) {
+              arr3.push(this.districtcollection, this.districtcollectiontwo, this.districtcollectionthree, this.districtcollectionfour)
+            } else if (this.districtcollection.length === 1 & this.districtcollections.length != 0) {
+              arr3.push(this.districtcollections, this.districtcollectiontwos, this.districtcollectionthrees, this.districtcollectionfours)
+            }
+            let arr4 = arr3.join('\\')
+            // let arr5 = this.valuedate.join('\\')
+            // let arr6 = []
+            // arr6.push(this.scenesheading, this.crowdtab)
+            // let arr7 = arr6.join('-')
+            var obj = {
+              name: arr2,
+              searchUUID: data.searchUUID,
+              dataCount: data.dataCount
+            }
+            this.$store.commit('myval1', this.btname)
+            this.$store.commit('myobj', obj)
+            this.$router.push({ path: '/index/cxjg.vue', query: { obj: obj, } })
+          }
+      })
     }
   }
 }

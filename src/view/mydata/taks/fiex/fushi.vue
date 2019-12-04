@@ -1,7 +1,8 @@
 <template>
   <div>
     <el-row style="margin-top:20px;">
-      <el-button :class="$style.f_btn" style="float:left;margin-left:20px;" size="medium">导出报表</el-button>
+      <!-- <el-button :class="$style.f_btn" style="float:left;margin-left:20px;" size="medium">导出报表</el-button> -->
+        <div class="daochu"  @click="exportc" style="display: inline;float:left;margin-left:20px;width:100px;height:45px;line-height:45px;background:#d9b4fa;border-radius: 5px;color:#fff;cursor: pointer;">导出图表</div>
       <div style="float: right; margin-right: 20px;">
         <el-date-picker
           v-model="value1"
@@ -16,55 +17,55 @@
     </el-row>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc}}</span>
-      <div id="myChart9" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart9" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc1}}</span>
-      <div id="myChart10" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart10" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc2}}</span>
-      <div id="myChart11" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart11" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc3}}</span>
-      <div id="myChart12" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart12" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc4}}</span>
-      <div id="myChart13" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart13" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc5}}</span>
-      <div id="myChart14" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart14" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc6}}</span>
-      <div id="myChart15" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart15" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc7}}</span>
-      <div id="myChart16" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart16" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc8}}</span>
-      <div id="myChart1" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart1" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc9}}</span>
-      <div id="myChart2" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart2" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc10}}</span>
-      <div id="myChart3" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart3" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc11}}</span>
-      <div id="myChart4" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart4" style="position: static; width:100%;height:300px;"></div>
     </div>
     <div :class="$style.f_hx1">
       <span :class="$style.f_mc">{{mc12}}</span>
-      <div id="myChart5" style="position: static; width:280px;height:300px;left:4%;"></div>
+      <div id="myChart5" style="position: static; width:100%;height:300px;"></div>
     </div>
     <br>
 
@@ -116,8 +117,14 @@ export default {
   mounted () {
     this.id = this.$store.state.id
     this.getList()
+    this.settime()
   },
   methods: {
+    settime(){//当前日期
+       let Time = new Date();
+       Time.getTime() - 3600 * 1000 * 24;
+       this.value1= [Time,Time]
+     },
     getList () {
       this.$http.get(`pc/fixedPortrait/selectClothing`,{params:{
         taskId:this.id
@@ -182,6 +189,43 @@ export default {
         console.log('错误信息' + err)
       })
     },
+    exportc(){
+       this.$http.get(`pc/fixedPortrait/exportClothing`,{params:{
+        taskId:this.id,
+        'dateStr4Start': this.value1[0],
+        'dateStr4end': this.value1[1]
+      }}).then(res => {
+                         let filePath = res.data.data.path
+        let fileName = res.data.data.fileName
+        window.location.href =  `http://47.105.207.228:8874/pc/fixedPortrait/export/fixed?filePath=${filePath}&fileName=${fileName}`
+
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.drawLine9(data);
+          this.drawLine10(data);
+          this.drawLine11(data);
+          this.drawLine12(data);
+          this.drawLine13(data);
+          this.drawLine14(data);
+          this.drawLine15(data);
+          this.drawLine16(data);
+          this.drawLine1(data);
+          this.drawLine2(data);
+          this.drawLine3(data);
+          this.drawLine4(data);
+          this.drawLine5(data);
+          this.drawLine17(data);
+          this.drawLine18(data);
+          this.drawLine19(data);
+          this.drawLine20(data);
+          this.drawLine21(data);
+          this.drawLine22(data);
+          this.drawLine25(data);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    },
     drawLine9 (data) {
       let accessories = []
       data.accessories.forEach(item => {
@@ -192,7 +236,7 @@ export default {
         color: ['#8C99AD', '#41E0FC', '#0079FE', '#B8E986', '#FF8F00'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -209,8 +253,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -222,7 +267,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.accessories
@@ -238,10 +286,10 @@ export default {
       })
       let myChart = this.$echarts.init(document.getElementById("myChart10"));
       let option = {
-        color: ['#41E0FC ', '#0079FE', '#B8E986'], //环形图每块的颜色
+        color: ['#8C99AD', '#41E0FC', '#FB745B', '#0079FE','#f1696f','#69dcf1','#89f169','#f169e6','#471c43'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -258,8 +306,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -271,7 +320,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.accessoriesPrice
@@ -287,10 +339,10 @@ export default {
       })
       let myChart = this.$echarts.init(document.getElementById("myChart11"));
       let option = {
-        color: ['#8C99AD', '#41E0FC', '#B8E986', '#FF8F00'], //环形图每块的颜色
+        color: ['#8C99AD', '#41E0FC', '#FB745B', '#0079FE','#69dcf1','#f1696f','#89f169','#f169e6','#471c43'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -307,8 +359,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -320,7 +373,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.clothing
@@ -339,7 +395,7 @@ export default {
         color: ['#0079FE', '#41E0FC', '#B8E986', '#FB745B', '#8C99AD', '#9013FE', '#53237E', '#F6D707', '#0079FE'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -356,8 +412,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -369,7 +426,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.girlPrice
@@ -385,10 +445,10 @@ export default {
       })
       let myChart = this.$echarts.init(document.getElementById("myChart13"));
       let option = {
-        color: ['#8C99AD', '#41E0FC', '#FB745B', '#0079FE'], //环形图每块的颜色
+        color: ['#8C99AD', '#41E0FC', '#FB745B', '#0079FE','#f1696f','#69dcf1','#89f169','#f169e6','#471c43'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -405,8 +465,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -418,7 +479,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.girlStyle
@@ -437,7 +501,7 @@ export default {
         color: ['#9013FE', '#41E0FC', '#B8E986', '#0079FE '], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -454,8 +518,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -467,7 +532,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.luggageCategories
@@ -486,7 +554,7 @@ export default {
         color: ['#8C99AD', '#41E0FC', '#FB745B', '#9013FE'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -503,8 +571,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -516,7 +585,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.menWearPrice
@@ -535,7 +607,7 @@ export default {
         color: ['#FF8F00', '#41E0FC', '#B8E986', '#0079FE '], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -552,8 +624,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                // position: 'center'
+                formatter: "{b}\n {d}%"
               },
               emphasis: {
                 show: true,
@@ -565,7 +638,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.menswearStyle
@@ -584,7 +660,7 @@ export default {
         color: ['#8C99AD', '#41E0FC', '#FB745B', '#0079FE'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -601,8 +677,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                formatter: "{b}\n {d}%"
+                // position: 'center'
               },
               emphasis: {
                 show: true,
@@ -614,7 +691,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.shoes
@@ -633,7 +713,7 @@ export default {
         color: ['#9013FE', '#41E0FC', '#B8E986', '#0079FE '], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -650,8 +730,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                formatter: "{b}\n {d}%"
+                // position: 'center'
               },
               emphasis: {
                 show: true,
@@ -663,7 +744,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.sportsOut
@@ -682,7 +766,7 @@ export default {
         color: ['#8C99AD', '#41E0FC', '#FB745B', '#9013FE'], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -699,8 +783,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                formatter: "{b}\n {d}%"
+                // position: 'center'
               },
               emphasis: {
                 show: true,
@@ -712,7 +797,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.sportsOutPrice
@@ -731,7 +819,7 @@ export default {
         color: ['#FF8F00', '#41E0FC', '#B8E986', '#0079FE '], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -748,8 +836,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                formatter: "{b}\n {d}%"
+                // position: 'center'
               },
               emphasis: {
                 show: true,
@@ -761,7 +850,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.underwearHomePrice
@@ -780,7 +872,7 @@ export default {
         color: ['#FF8F00', '#41E0FC', '#B8E986', '#0079FE '], //环形图每块的颜色
         tooltip: {
           trigger: 'item',
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
+          formatter: "{a} <br/>{b}:  {d}%"
         },
         legend: {
           orient: 'horizontal', //图例列表的布局朝向。 horizontal - 横向 ， vertical - 竖向
@@ -797,8 +889,9 @@ export default {
             avoidLabelOverlap: false,
             label: {
               normal: {
-                show: false,
-                position: 'center'
+                show: true,
+                formatter: "{b}\n {d}%"
+                // position: 'center'
               },
               emphasis: {
                 show: true,
@@ -810,7 +903,10 @@ export default {
             },
             labelLine: {
               normal: {
-                show: false
+                show: true,
+                smooth: 0.2,
+                length: 10,
+                length2: 20
               }
             },
             data: data.underwearHomeType
@@ -834,6 +930,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -908,7 +1005,7 @@ export default {
               normal: {
                 //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                 color: function (params) {
-                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
+                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A','#1786ba','#17ba99','#32ba17','#a9ba17','#ba9217','#ba2617','#d923e4','#b54366','#8c43b5','#696cf1','#f1696f']; //每根柱子的颜色
                   return colorList[params.dataIndex];
                 }
               },
@@ -939,6 +1036,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -989,7 +1087,7 @@ export default {
               normal: {
                 //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                 color: function (params) {
-                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
+                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A','#1786ba','#17ba99','#32ba17','#a9ba17','#ba9217','#ba2617','#d923e4','#b54366','#8c43b5','#696cf1','#f1696f']; //每根柱子的颜色
                   return colorList[params.dataIndex];
                 }
               },
@@ -1020,6 +1118,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -1070,7 +1169,7 @@ export default {
               normal: {
                 //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                 color: function (params) {
-                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
+                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A','#1786ba','#17ba99','#32ba17','#a9ba17','#ba9217','#ba2617','#d923e4','#b54366','#8c43b5','#696cf1','#f1696f']; //每根柱子的颜色
                   return colorList[params.dataIndex];
                 }
               },
@@ -1101,6 +1200,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -1151,7 +1251,7 @@ export default {
               normal: {
                 //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                 color: function (params) {
-                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
+                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A','#1786ba','#17ba99','#32ba17','#a9ba17','#ba9217','#ba2617','#d923e4','#b54366','#8c43b5','#696cf1','#f1696f']; //每根柱子的颜色
                   return colorList[params.dataIndex];
                 }
               },
@@ -1182,6 +1282,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -1232,7 +1333,7 @@ export default {
               normal: {
                 //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                 color: function (params) {
-                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
+                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A','#1786ba','#17ba99','#32ba17','#a9ba17','#ba9217','#ba2617','#d923e4','#b54366','#8c43b5','#696cf1','#f1696f']; //每根柱子的颜色
                   return colorList[params.dataIndex];
                 }
               },
@@ -1263,6 +1364,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -1313,7 +1415,7 @@ export default {
               normal: {
                 //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                 color: function (params) {
-                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
+                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A','#1786ba','#17ba99','#32ba17','#a9ba17','#ba9217','#ba2617','#d923e4','#b54366','#8c43b5','#696cf1','#f1696f']; //每根柱子的颜色
                   return colorList[params.dataIndex];
                 }
               },
@@ -1344,6 +1446,7 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
             type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
           }
@@ -1394,7 +1497,7 @@ export default {
               normal: {
                 //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                 color: function (params) {
-                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
+                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A','#1786ba','#17ba99','#32ba17','#a9ba17','#ba9217','#ba2617','#d923e4','#b54366','#8c43b5','#696cf1','#f1696f']; //每根柱子的颜色
                   return colorList[params.dataIndex];
                 }
               },

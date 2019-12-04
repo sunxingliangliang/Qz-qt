@@ -69,7 +69,7 @@
       </el-radio-group>
     </el-row>
     <el-row>
-      <el-button :class="$style.f_btn" style="float:left;margin-left:20px;" size="medium">导出报表</el-button>
+        <div class="daochu"  @click="exportc" style="display: inline;float:left;margin-left:20px;width:100px;height:45px;line-height:45px;background:#d9b4fa;border-radius: 5px;color:#fff;cursor: pointer;">导出图表</div>
       <div style="float: right; margin-right: 20px;">
         <el-date-picker
           v-model="value1"
@@ -146,8 +146,14 @@ export default {
   mounted () {
     this.id = this.$store.state.id
     this.getList()
+    this.settime()
   },
   methods: {
+    settime(){//当前日期
+       let Time = new Date();
+       Time.getTime() - 3600 * 1000 * 24;
+       this.value1= [Time,Time]
+     },
     getList () {
       // let info =new FormData()
       // info.append(`taskId`,this.id)
@@ -175,13 +181,13 @@ export default {
           }
           //创建地图
           var map = new BMap.Map("allmap");
-          map.centerAndZoom(new BMap.Point(112.591886, 26.905407), 14); // 设置中心点
+          map.centerAndZoom(new BMap.Point(116.46, 39.92), 12); // 设置中心点
           addMarker(points);
           map.addControl(new BMap.MapTypeControl());
           map.enableScrollWheelZoom(true);
           var heatmapOverlay = new BMapLib.HeatmapOverlay({ "radius": 20 });
           map.addOverlay(heatmapOverlay);
-          heatmapOverlay.setDataSet({ data: points, max: 100 });
+          heatmapOverlay.setDataSet({ data: points, max: 1 });
           heatmapOverlay.show();
           setTimeout(function () {
             setZoom(bPoints);
@@ -250,13 +256,13 @@ export default {
           }
           //创建地图
           var map = new BMap.Map("allmap");
-          map.centerAndZoom(new BMap.Point(112.591886, 26.905407), 14); // 设置中心点
+          map.centerAndZoom(new BMap.Point(116.46, 39.92), 12); // 设置中心点
           addMarker(points);
           map.addControl(new BMap.MapTypeControl());
           map.enableScrollWheelZoom(true);
           var heatmapOverlay = new BMapLib.HeatmapOverlay({ "radius": 20 });
           map.addOverlay(heatmapOverlay);
-          heatmapOverlay.setDataSet({ data: points, max: 100 });
+          heatmapOverlay.setDataSet({ data: points, max: 1 });
           heatmapOverlay.show();
           setTimeout(function () {
             setZoom(bPoints);
@@ -268,6 +274,79 @@ export default {
         console.log('错误信息'+err)
       })
     },
+    exportc(){
+      let info = {}
+      if (this.value1 === '') {
+        info = {
+          'taskId': this.id,
+          // "startDate":this.value1[0],
+          // 'endDate':this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'type':this.radio6,
+          'income': this.checkboxGroup5
+        }
+      } else {
+        info = {
+          'taskId': this.id,
+          "startDate":this.value1[0],
+          'endDate':this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'type':this.radio6,
+          'income': this.checkboxGroup5
+        }
+      }
+      // console.log(this.radio6)
+      this.$http.post(`pc/fixedPortrait/exportAddress`,info).then(res=>{
+        let filePath = res.data.data.path
+        let fileName = res.data.data.fileName
+        window.location.href =  `http://47.105.207.228:8874/pc/fixedPortrait/export/fixed?filePath=${filePath}&fileName=${fileName}`
+        var{code,data}=res.data
+        if(code===1000){
+          console.log(data)
+          this.data = data
+          var points = this.data;
+          // 百度坐标系坐标(地图中需要使用这个)
+          var bPoints = new Array();
+          //创建标注点并添加到地图中
+          function addMarker (points) {
+            for (var i = 0, pointsLen = points.length; i < pointsLen; i++) {
+              var point = new BMap.Point(points[i].lng, points[i].lat); //将标注点转化成地图上的点
+              bPoints.push(point); // 添加到百度坐标数组 用于自动调整缩放级别
+            }
+          }
+          // 根据点的数组自动调整缩放级别
+          function setZoom (bPoints) {
+            var view = map.getViewport(eval(bPoints));
+            var mapZoom = view.zoom;
+            var centerPoint = view.center;
+            map.centerAndZoom(centerPoint, mapZoom);
+          }
+          //创建地图
+          var map = new BMap.Map("allmap");
+          map.centerAndZoom(new BMap.Point(116.46, 39.92), 12); // 设置中心点
+          addMarker(points);
+          map.addControl(new BMap.MapTypeControl());
+          map.enableScrollWheelZoom(true);
+          var heatmapOverlay = new BMapLib.HeatmapOverlay({ "radius": 20 });
+          map.addOverlay(heatmapOverlay);
+          heatmapOverlay.setDataSet({ data: points, max: 1 });
+          heatmapOverlay.show();
+          setTimeout(function () {
+            setZoom(bPoints);
+          }, 3000)
+        }else{
+          console.log(data)
+        }
+      }).catch((err)=>{
+        console.log('错误信息'+err)
+      })
+    }
   }
 }
 </script>
@@ -277,7 +356,7 @@ export default {
   border: 1px solid #e6e9f0;
   display: block;
   margin-top: 20px;
-  margin-right: 2%;
+  // margin-right: 2%;
   margin-left: 2%;
   margin-bottom: 30px;
   height: 330px;

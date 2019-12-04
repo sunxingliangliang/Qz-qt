@@ -121,8 +121,8 @@
         >
           <el-option v-for="item in field" :key="item.value" :label="item.name" :value="item.id"></el-option>
         </el-select>
-        <i class="iconfont iconzuobiao" @click="Geofence"></i>
-        <p :class="$style.f_rwmc" style="padding-left: 0%;">人群标签</p>
+        <!-- <i class="iconfont iconzuobiao" @click="Geofence"></i> -->
+        <p :class="$style.f_rwmc" style="padding-left: 2.5%;">人群标签</p>
         <el-select
           v-model="people"
           @focus="crowdlabel"
@@ -635,6 +635,9 @@ export default {
           let option = {
             url: 'pc/group/findGroup',
             methods: 'get',
+            params: {
+              pid: 1
+            },
             data: {
               groupId: level
             }

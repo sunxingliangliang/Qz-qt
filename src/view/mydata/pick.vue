@@ -77,7 +77,7 @@
           <div :class="$style.f_btn" @click="orderikion">订购画像</div>
           <div :class="$style.f_btn" @click="orderdata">订购数据</div>
         </div>
-          <div :class="$style.f_btns" @click="complementary">确权补充机制</div>
+          <!-- <div :class="$style.f_btns" @click="complementary">确权补充机制</div> -->
       </div>
       <!-- <router-view></router-view> -->
       <!-- 全部 -->
@@ -189,6 +189,9 @@
               </span>
             </template>
           </el-table-column>
+          <!-- <el-table-column label="编辑" width="80" align="center">
+            <el-button>编辑</el-button>
+          </el-table-column> -->
         </el-table>
       </div>
       <!-- 已完成 -->
@@ -764,8 +767,24 @@
         </div>
         <p :class="$style.f_sjxx">数据信息</p>
         <div :class="$style.f_hxrow">
-          <span :class="$style.f_ddname">源数据量：</span>
+          <span :class="$style.f_ddname">源数据总量：</span>
           <span :class="$style.f_ddname">{{ysjl1}}</span>
+        </div>
+         <div :class="$style.f_hxrow">
+          <span :class="$style.f_ddname">选择日期：</span>
+          <el-date-picker
+            v-model="sdata"
+            type="daterange"
+            value-format="yyyy-MM-dd"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          ></el-date-picker>
+        <el-button @click="buttons">查询</el-button>
+        </div>  
+        <div :class="$style.f_hxrow">
+          <span :class="$style.f_ddname">日期数量：{{riqi}}</span>
+          <span :class="$style.f_ddname"></span>
         </div>
         <div :class="$style.f_hxrow">
           <span :class="$style.f_ddname">订单数量:</span>
@@ -777,78 +796,6 @@
             clearable
           ></el-input>
         </div>
-        <!-- <div :class="$style.f_hxrow">
-          <div style="line-height: 40px;margin-right: 1%;display: inline-block;">
-            <span :class="$style.f_ddname">数据范围:</span>
-          </div>
-          <div style="line-height: 40px;display: inline-block;">
-            <span>居住地点:</span>
-          </div>
-          <div style="display: inline-block;">
-            <el-cascader
-              :change-on-select="true"
-              :options="dwell"
-              :props="props"
-              v-model="placeofresidence"
-              @change="live"
-              clearable
-            ></el-cascader>
-          </div>
-          <div style="line-height: 40px;display: inline-block;margin-left:5%;">
-            <span>年龄:</span>
-          </div>
-          <div style="display: inline-block;width:13%;">
-            <el-select v-model="age" @change="live" clearable placeholder="请选择">
-              <el-option
-                v-for="item in agebin"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </div>
-          <div style="display: inline-block;margin-left:5%;">
-            <span>职业:</span>
-          </div>
-          <div style="line-height: 40px;display: inline-block;">
-            <el-select v-model="zy" @change="live" clearable placeholder="请选择">
-              <el-option
-                v-for="item in career"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </div>
-        </div>
-        <div :class="$style.f_hxrow">
-          <div style="line-height: 40px;margin-left:9%;display: inline-block;" :span="2">
-            <span>工作地点:</span>
-          </div>
-          <div style="display: inline-block;">
-            <el-cascader
-              :change-on-select="true"
-              :options="work"
-              :props="worksite"
-              v-model="workplace"
-              @change="live"
-              clearable
-            ></el-cascader>
-          </div>
-          <div style="line-height: 40px;    margin-left: 5%;display: inline-block;" :span="3">
-            <span>性别:</span>
-          </div>
-          <div style="display: inline-block; width:13%">
-            <el-select v-model="jzdd" @change="live" clearable placeholder="请选择">
-              <el-option
-                v-for="item in sex"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </div>
-        </div> -->
         <div :class="$style.f_hxrow">
           <span :class="$style.f_ddname">订购金额：</span>
           <span :class="$style.f_ddname" v-if="dgmoney!=null">{{dgmoney}}VKT</span>
@@ -899,7 +846,7 @@
           v-model="textarea2"
         ></el-input>
         <span slot="footer" class="dialog-footer">
-          <span @click="dgdata = false" style="display: inline-block;" :class="$style.f_btn">取消</span>
+          <span @click="dgdatas" style="display: inline-block;" :class="$style.f_btn">取消</span>
           <span @click="queding" style="display: inline-block;" :class="$style.f_btn">提交</span>
         </span>
       </el-dialog>
@@ -911,6 +858,7 @@
 import footerl from '../footer/footerl'
 import axios from 'axios'
 export default {
+  inject:['reload'],
   components: {
     footerl
   },
@@ -939,6 +887,7 @@ export default {
       xz7: false,
       xz8: true,
       xz9: false,
+      sdata:'',
       // 全部
       tableData: [],
       tableData1: [],
@@ -1093,14 +1042,45 @@ export default {
       dataPrice: null,
       mappingPrice: null,
       refer: false,
-      list:null
+      list:null,
+      riqi:''
     }
   },
   mounted () {
     this.getTask();
-    this.qb()
+    this.qb();
+    // this.buttons()
   },
   methods: {
+    dgdatas(){
+      this.dgdata = false
+      this.reload()
+    },
+    buttons(){
+       let info = {
+        // 'taskIds': this.id,
+        'ids': this.id,
+        type:1,
+        'startDate': this.sdata[0],
+        'endDate': this.sdata[1]
+
+      }
+      this.$http.post(`pc/task/getDataCount`, info).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+            this.riqi = data.dataNum
+        } else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    },
     // 采集任务统计
     getTask () {
       this.$http.get('pc/task/countTask').then(res => {
@@ -1861,36 +1841,6 @@ export default {
       }
      
     },
-    //确权补充机制
-    complementary(){
-      if(this.ids === ''){
-        this.$message.error('请选择要确权的补充机制')
-      }else{
-          let info = {
-          ids:this.id,
-        // list:this.list
-      }
-      this.$http.post(`pc/task/restData`,info).then(res => {
-        var { code, data } = res.data
-          if (code === 1000) {
-            this.$message({
-              message: '添加成功',
-              type: 'success'
-            });
-          } else if (code == 2001) {
-            this.$message.error(res.data.message);
-            window.sessionStorage.clear();
-            window.localStorage.clear();
-            this.$router.push('/')
-          } else {
-            this.$message.error(res.data.message);
-          }
-        }).catch((err) => {
-          console.log('错误信息' + err)
-        })
-      }
-     
-    },
     // 计算金额
     cipher () {
       if (this.ysjl1 < this.buyAmount) {
@@ -1899,7 +1849,11 @@ export default {
       } else if (this.buyAmount <= 0) {
         this.$message.error('输入有误,请重新输入');
         this.refer = true
-      } else {
+      }else if(this.riqi < this.buyAmount){
+        this.$message.error('订购数量大于日期数量,请重新输入');
+        this.refer = true
+      }
+       else {
         this.dgmoney = Number(this.buyAmount) * this.dataPrice
         this.refer = false
       }
@@ -2322,19 +2276,6 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // let info = new FormData()
-        // info.append('name', this.formname,)
-        // info.append('buyAmount', this.buyAmount,)
-        // info.append('ids', this.ids,)
-        // info.append('taskIds', this.id,)
-        // info.append('buyPrice', this.dgmoney,)
-        // info.append('gender', this.jzdd,)
-        // info.append('agebin', this.age,)
-        // info.append('occupation', this.zy,)
-        // info.append('workplaceProvince', this.workplace[0],)
-        // info.append('workplaceCity', this.workplace[1],)
-        // info.append('residenceProvince', this.placeofresidence[0],)
-        // info.append('residenceCity', this.placeofresidence[1])、
         let info = {
           'name': this.formname,
           'buyAmount': this.buyAmount,
@@ -2347,7 +2288,9 @@ export default {
           'workplaceProvince': this.workplace[0],
           'workplaceCity': this.workplace[1],
           'residenceProvince': this.placeofresidence[0],
-          'residenceCity': this.placeofresidence[1]
+          'residenceCity': this.placeofresidence[1],
+          'startDate': this.sdata[0],
+          'endDate': this.sdata[1]
         }
         if (this.refer === true) {
           this.$message.error('订购数量输入有误,请重新输入');
@@ -2371,7 +2314,6 @@ export default {
           }).catch(function (err) {
             console.log('错误信息' + err)
           })
-
           this.dgdata = false
         }
       }).catch(() => {

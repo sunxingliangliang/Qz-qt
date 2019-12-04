@@ -190,6 +190,9 @@ export default {
           this.zz2 = data.data.compare
           this.task  = data.task.count
           this.zz3 = data.task.compare
+          if(this.zz1 < 0){
+            this.zz1 = 0
+          }
         }else if(code==2001){
            this.$message.error(res.data.message);
             window.sessionStorage.clear();
@@ -386,7 +389,7 @@ export default {
                   formatter: function (params) {
                     var newParamsName = "";
                     var paramsNameNumber = params.length;
-                    var provideNumber = 8; //一行显示几个字
+                    var provideNumber = 2; //一行显示几个字
                     var rowNumber = Math.ceil(paramsNameNumber / provideNumber);
                     if (paramsNameNumber > provideNumber) {
                       for (var p = 0; p < rowNumber; p++) {

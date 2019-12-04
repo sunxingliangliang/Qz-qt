@@ -418,6 +418,9 @@ export default {
             cnyFreeze: data.cnyFreeze,
             cnyall: data.cnyAmount - data.cnyFreeze
           }
+          if(vkt.vktall < 0) {
+            vkt.vktall = 0
+          }
           this.money.push(cny)
           this.money1.push(vkt)
         }

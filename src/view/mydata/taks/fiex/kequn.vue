@@ -2,7 +2,7 @@
   <div>
     <el-row :class="$style.f_row1">
       <h6 :class="$style.f_xb">性别</h6>
-      <el-checkbox-group v-model="checkboxGroup1" @change="dj1" :class="$style.f_dx">
+      <el-checkbox-group v-model="checkboxGroup1" :class="$style.f_dx">
         <el-checkbox-button
           v-for="city in cities"
           style="margin-left:20px;"
@@ -14,7 +14,7 @@
     </el-row>
     <el-row :class="$style.f_row1">
       <h6 :class="$style.f_xb">年龄</h6>
-      <el-checkbox-group v-model="checkboxGroup2" @change="dj" :class="$style.f_dx">
+      <el-checkbox-group v-model="checkboxGroup2"  :class="$style.f_dx">
         <el-checkbox-button
           v-for="(city1,i) in cities1"
           style="margin-left:20px;"
@@ -65,13 +65,16 @@
       <el-radio-group v-model="radio6" :class="$style.f_dx">
         <el-radio-button label="1" style="margin-left: 29px;">小区</el-radio-button>
         <el-radio-button label="2" style="margin-left:20px;">办公</el-radio-button>
-        <el-radio-button label="3" style="margin-left:20px;">商圈</el-radio-button>
+        <el-radio-button label="3" style="margin-left:20px;">行政区</el-radio-button>
         <el-radio-button label="4" style="margin-left: 29px;">省级</el-radio-button>
         <el-radio-button label="5" style="margin-left:20px;">市级</el-radio-button>
+        <el-radio-button label="6" style="margin-left:20px;">商场</el-radio-button>
+        <el-radio-button label="7" style="margin-left:20px;">丽人</el-radio-button>
       </el-radio-group>
     </el-row>
     <el-row>
-      <el-button :class="$style.f_btn" style="float:left;margin-left:20px;" size="medium">导出报表</el-button>
+      <div class="daochu"  @click="exportc" style="display: inline;float:left;margin-left:20px;width:100px;height:45px;line-height:45px;background:#d9b4fa;border-radius: 5px;color:#fff;cursor: pointer;">导出图表</div>
+      <div class="daochu"  @click="exportcarr" style="display: inline;float:left;margin-left:20px;width:100px;height:45px;line-height:45px;background:#d9b4fa;border-radius: 5px;color:#fff;cursor: pointer;">导出热力图</div>
       <div style="float: right; margin-right: 20px;">
         <el-date-picker
           v-model="value1"
@@ -86,7 +89,7 @@
     </el-row>
     <div :class="$style.f_hx2">
       <div id="myChart" style="position: static; width:49%;height:300px; display: inline-block;"></div>
-      <div id="allmap" style="height:330px; width:49%;   display: inline-block;"></div>
+      <div id="allmap" style="height:330px; width:49%;   display: inline-block;" ></div>
     </div>
   </div>
 </template>
@@ -144,8 +147,14 @@ export default {
   mounted () {
     this.id = this.$store.state.id
     this.getList()
+    this.settime()
   },
   methods: {
+    settime(){//当前日期
+       let Time = new Date();
+       Time.getTime() - 3600 * 1000 * 24;
+       this.value1= [Time,Time]
+     },
     getList () {
       let id = this.id
       this.$http.post(`pc/fixedPortrait/selectCustomerAddr`, { taskId: id ,aireType:1}).then(res => {
@@ -175,9 +184,9 @@ export default {
           addMarker(points);
           map.addControl(new BMap.MapTypeControl());
           map.enableScrollWheelZoom(true);
-          var heatmapOverlay = new BMapLib.HeatmapOverlay({ "radius": 20 });
+          var heatmapOverlay = new BMapLib.HeatmapOverlay({ "radius": 30 });
           map.addOverlay(heatmapOverlay);
-          heatmapOverlay.setDataSet({ data: points, max: 100 });
+          heatmapOverlay.setDataSet({ data: points, max: 10 });
           heatmapOverlay.show();
           setTimeout(function () {
             setZoom(bPoints);
@@ -195,12 +204,6 @@ export default {
         console.log('错误信息' + err)
       })
     },
-    dj () {
-      console.log(this.checkboxGroup2)
-    },
-    dj1 () {
-      console.log(this.checkboxGroup1)
-    },
     drawLine (data) {
       console.log(data)
       let name = []
@@ -217,8 +220,9 @@ export default {
         color: ['#22314F'],
         tooltip: {
           trigger: 'axis',
+          formatter: "{a} <br/>{b}: {c}%",
           axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            type: 'shadow'  ,      // 默认为直线，可选为：'line' | 'shadow'
           }
         },
         grid: {
@@ -231,6 +235,7 @@ export default {
         yAxis: [
           {
             type: 'category',
+            inverse: true,//排序大到小
             data: name,
             axisLabel: {
               interval: 0,
@@ -238,7 +243,7 @@ export default {
                 // console.log(params)
                 var newParamsName = "";
                 var paramsNameNumber = params.length;
-                var provideNumber = 8; //一行显示几个字
+                var provideNumber = 21; //一行显示几个字
                 var rowNumber = Math.ceil(paramsNameNumber / provideNumber);
                 if (paramsNameNumber > provideNumber) {
                   for (var p = 0; p < rowNumber; p++) {
@@ -287,7 +292,7 @@ export default {
               normal: {
                 //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                 color: function (params) {
-                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
+                  var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A','#1786ba','#17ba99','#32ba17','#a9ba17','#ba9217','#ba2617','#d923e4','#b54366','#8c43b5','#696cf1','#f1696f']; //每根柱子的颜色
                   return colorList[params.dataIndex];
                 }
               },
@@ -409,7 +414,7 @@ export default {
           map.enableScrollWheelZoom(true);
           var heatmapOverlay = new BMapLib.HeatmapOverlay({ "radius": 20 });
           map.addOverlay(heatmapOverlay);
-          heatmapOverlay.setDataSet({ data: points, max: 100 });
+          heatmapOverlay.setDataSet({ data: points, max: 10 });
           heatmapOverlay.show();
           setTimeout(function () {
             setZoom(bPoints);
@@ -429,6 +434,264 @@ export default {
         console.log('错误信息' + err)
       })
     },
+    exportc(){
+       let info = {}
+      if (this.value1 === ''&&this.radio6!='4'&&this.radio6!='5') {
+        info = {
+          'taskId': this.id,
+          // "startDate":this.value1[0],
+          // 'endDate':this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'aireType': this.radio6,
+          'income': this.checkboxGroup5,
+        }
+      } else if(this.value1 != ''&&this.radio6!='4'&&this.radio6!='5') {
+        info = {
+          'taskId': this.id,
+          "startDate": this.value1[0],
+          'endDate': this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'aireType': this.radio6,
+          'income': this.checkboxGroup5,
+        }
+      }else if(this.value1 === ''&&this.radio6==='4'){
+        info={
+          'taskId': this.id,
+          "startDate": this.value1[0],
+          'endDate': this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'nationalType': '4',
+          'income': this.checkboxGroup5,
+        }
+      }else if(this.value1 === ''&&this.radio6==='5'){
+        info={
+          'taskId': this.id,
+          "startDate": this.value1[0],
+          'endDate': this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'nationalType': '5',
+          'income': this.checkboxGroup5,
+        }
+      }else if(this.value1 != ''&&this.radio6==='4'){
+        info={
+          'taskId': this.id,
+          "startDate": this.value1[0],
+          'endDate': this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'nationalType': '4',
+          'income': this.checkboxGroup5,
+        }
+      }else if(this.value1 != ''&&this.radio6==='5'){
+        info={
+          'taskId': this.id,
+          "startDate": this.value1[0],
+          'endDate': this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'nationalType': '5',
+          'income': this.checkboxGroup5,
+        }
+      }
+      // console.log(info)
+      this.$http.post(`pc/fixedPortrait/exportCustomer`, info).then(res => {
+        let filePath = res.data.data.path
+        let fileName = res.data.data.fileName
+        window.location.href =  `http://47.105.207.228:8874/pc/fixedPortrait/export/fixed?filePath=${filePath}&fileName=${fileName}`
+        var { code, data } = res.data
+        if (code === 1000) {
+          console.log(data)
+          this.data = data
+          var points = this.data;
+          // 百度坐标系坐标(地图中需要使用这个)
+          var bPoints = new Array();
+          //创建标注点并添加到地图中
+          function addMarker (points) {
+            for (var i = 0, pointsLen = points.length; i < pointsLen; i++) {
+              var point = new BMap.Point(points[i].lng, points[i].lat); //将标注点转化成地图上的点
+              bPoints.push(point); // 添加到百度坐标数组 用于自动调整缩放级别
+            }
+          }
+          // 根据点的数组自动调整缩放级别
+          function setZoom (bPoints) {
+            var view = map.getViewport(eval(bPoints));
+            var mapZoom = view.zoom;
+            var centerPoint = view.center;
+            map.centerAndZoom(centerPoint, mapZoom);
+          }
+          //创建地图
+          var map = new BMap.Map("allmap");
+          map.centerAndZoom(new BMap.Point(112.591886, 26.905407), 14); // 设置中心点
+          addMarker(points);
+          map.addControl(new BMap.MapTypeControl());
+          map.enableScrollWheelZoom(true);
+          var heatmapOverlay = new BMapLib.HeatmapOverlay({ "radius": 20 });
+          map.addOverlay(heatmapOverlay);
+          heatmapOverlay.setDataSet({ data: points, max: 10 });
+          heatmapOverlay.show();
+          setTimeout(function () {
+            setZoom(bPoints);
+          }, 3000)
+        } else {
+          console.log(data)
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+      this.$http.post(`pc/fixedPortrait/selectCustomer`, info).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.drawLine(data)
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    },
+    exportcarr(){
+      let info = {}
+      if (this.value1 === ''&&this.radio6!='4'&&this.radio6!='5') {
+        info = {
+          'taskId': this.id,
+          // "startDate":this.value1[0],
+          // 'endDate':this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'aireType': this.radio6,
+          'income': this.checkboxGroup5,
+        }
+      } else if(this.value1 != ''&&this.radio6!='4'&&this.radio6!='5') {
+        info = {
+          'taskId': this.id,
+          "startDate": this.value1[0],
+          'endDate': this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'aireType': this.radio6,
+          'income': this.checkboxGroup5,
+        }
+      }else if(this.value1 === ''&&this.radio6==='4'){
+        info={
+          'taskId': this.id,
+          "startDate": this.value1[0],
+          'endDate': this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'nationalType': '4',
+          'income': this.checkboxGroup5,
+        }
+      }else if(this.value1 === ''&&this.radio6==='5'){
+        info={
+          'taskId': this.id,
+          "startDate": this.value1[0],
+          'endDate': this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'nationalType': '5',
+          'income': this.checkboxGroup5,
+        }
+      }else if(this.value1 != ''&&this.radio6==='4'){
+        info={
+          'taskId': this.id,
+          "startDate": this.value1[0],
+          'endDate': this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'nationalType': '4',
+          'income': this.checkboxGroup5,
+        }
+      }else if(this.value1 != ''&&this.radio6==='5'){
+        info={
+          'taskId': this.id,
+          "startDate": this.value1[0],
+          'endDate': this.value1[1],
+          'gender': this.checkboxGroup1,
+          'agebin': this.checkboxGroup2,
+          'edu': this.checkboxGroup3,
+          'kids': this.checkboxGroup4,
+          'nationalType': '5',
+          'income': this.checkboxGroup5,
+        }
+      }
+      // console.log(info)
+      this.$http.post(`pc/fixedPortrait/exportCustomerAddr`, info).then(res => {
+        let filePath = res.data.data.path
+        let fileName = res.data.data.fileName
+        window.location.href =  `http://47.105.207.228:8874/pc/fixedPortrait/export/fixed?filePath=${filePath}&fileName=${fileName}`
+        var { code, data } = res.data
+        if (code === 1000) {
+          console.log(data)
+          this.data = data
+          var points = this.data;
+          // 百度坐标系坐标(地图中需要使用这个)
+          var bPoints = new Array();
+          //创建标注点并添加到地图中
+          function addMarker (points) {
+            for (var i = 0, pointsLen = points.length; i < pointsLen; i++) {
+              var point = new BMap.Point(points[i].lng, points[i].lat); //将标注点转化成地图上的点
+              bPoints.push(point); // 添加到百度坐标数组 用于自动调整缩放级别
+            }
+          }
+          // 根据点的数组自动调整缩放级别
+          function setZoom (bPoints) {
+            var view = map.getViewport(eval(bPoints));
+            var mapZoom = view.zoom;
+            var centerPoint = view.center;
+            map.centerAndZoom(centerPoint, mapZoom);
+          }
+          //创建地图
+          var map = new BMap.Map("allmap");
+          map.centerAndZoom(new BMap.Point(112.591886, 26.905407), 14); // 设置中心点
+          addMarker(points);
+          map.addControl(new BMap.MapTypeControl());
+          map.enableScrollWheelZoom(true);
+          var heatmapOverlay = new BMapLib.HeatmapOverlay({ "radius": 20 });
+          map.addOverlay(heatmapOverlay);
+          heatmapOverlay.setDataSet({ data: points, max: 10 });
+          heatmapOverlay.show();
+          setTimeout(function () {
+            setZoom(bPoints);
+          }, 3000)
+        } else {
+          console.log(data)
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+      this.$http.post(`pc/fixedPortrait/selectCustomer`, info).then(res => {
+        var { code, data } = res.data
+        if (code === 1000) {
+          this.drawLine(data)
+        }
+      }).catch((err) => {
+        console.log('错误信息' + err)
+      })
+    }
   }
 }
 </script>

@@ -43,7 +43,7 @@
             >
             <p class="yanzheng" v-show="mima">请输入正确的密码</p>
           </div>
-          <div class="drag" ref="dragDiv">
+          <!-- <div class="drag" ref="dragDiv">
             <div class="drag_bg"></div>
             <div class="drag_text">{{confirmWords}}</div>
             <div
@@ -53,7 +53,18 @@
               class="handler handler_bg"
               style="position: absolute;top: 0px;left: 0px; border-radius: 5px;"
             ></div>
-          </div>
+          </div> -->
+            <div class="form-group" style="display: flex;">
+              <div>
+                <!-- <span>验证码：</span> -->
+                <input type="text" id="code" v-model="code" class="code"  placeholder="请输入您的验证码" style="background:#fff" />
+                </div>
+              <div class="login-code" @click="refreshCode">
+                    <!--验证码组件-->
+                    <s-identify :identifyCode="identifyCode"></s-identify>
+                    <span style="color:#fff;cursor: pointer;">看不清，换一张</span>
+              </div>
+            </div>
           <span class="btn1" @click="denglu">登录</span>
         </div>
       </div>
@@ -63,9 +74,16 @@
 
 <script>
 import md5 from "js-md5";
+import SIdentify from "../login/identif.vue"
 export default {
+  //  name: "codetest",
+  name: 'userLogin',
+  components: { SIdentify },
   data () {
     return {
+      identifyCodes: "1234567890",
+      identifyCode: "",
+      code:"",
       input: '',
       input1: '',
       btname: '首页',
@@ -83,14 +101,29 @@ export default {
     }
   },
   mounted () {
-    this.maxwidth = this.$refs.dragDiv.clientWidth - this.$refs.moveDiv.clientWidth;
-    document.getElementsByTagName('html')[0].addEventListener('mousemove', this.mouseMoveFn);
-    document.getElementsByTagName('html')[0].addEventListener('mouseup', this.moseUpFn)
+    // this.maxwidth = this.$refs.dragDiv.clientWidth - this.$refs.moveDiv.clientWidth;
+    // document.getElementsByTagName('html')[0].addEventListener('mousemove', this.mouseMoveFn);
+    // document.getElementsByTagName('html')[0].addEventListener('mouseup', this.moseUpFn)
+     this.identifyCode = "";
+    this.makeCode(this.identifyCodes, 4);
+  },
+  created(){
+    this.refreshCode()
   },
   methods: {
     denglu () {
       let md = this.$md5(this.input1);
-      if (this.confirmWords === '验证通过') {
+        if(this.code === ''){
+          this.$message.error('验证码不能为空')
+          return
+        }
+        if(this.identifyCode !== this.code){
+          this.code = ''
+          this.refreshCode()
+          // alert('输入的验证码不正确')
+          this.$message.error('输入的验证码不正确')
+          return
+        }
         this.$http.post(`pc/user/login`, { username: this.input, password: md }).then(res => {
           var { code, data } = res.data
           if (code === 1000) {
@@ -102,21 +135,12 @@ export default {
             window.sessionStorage.setItem("data", JSON.stringify(arr));
             // console.log(JSON.stringify(arr))
             this.$router.push('./index/indexx.vue')
-          } else {
-            this.$message.error(res.data.message);
-            this.confirmWords = '拖动滑块验证'
-            this.confirmSuccess = false
-            document.getElementsByClassName('drag_text')[0].style.color = '#fff'
-            this.maxwidth = this.$refs.dragDiv.clientWidth - this.$refs.moveDiv.clientWidth;
-            document.getElementsByTagName('html')[0].addEventListener('mousemove', this.mouseMoveFn);
-            document.getElementsByTagName('html')[0].addEventListener('mouseup', this.moseUpFn)
+          } else{
+             this.$message.error(res.data.message);
           }
         }).catch((err) => {
           console.log('错误信息' + err)
         })
-      }else{
-        this.$message.error('需要拖动滑块验证')
-      }
     },
     hqjd () {
       this.user = ''
@@ -191,7 +215,22 @@ export default {
           this.successFunction();
         }
       }
-    },                //mousemove事件
+    },     
+    randomNum(min, max) {
+      return Math.floor(Math.random() * (max - min) + min);
+    },
+    refreshCode() {
+      this.identifyCode = "";
+      this.makeCode(this.identifyCodes, 4);
+    },
+    makeCode(o, l) {
+      for (let i = 0; i < l; i++) {
+        this.identifyCode += this.identifyCodes[
+          this.randomNum(0, this.identifyCodes.length)
+        ];
+      }
+    //   console.log(this.identifyCode);
+    },           //mousemove事件
     moseUpFn (e) {
       this.mouseMoveStata = false;
       var width = e.clientX - this.beginClientX;
@@ -199,12 +238,16 @@ export default {
         document.getElementsByClassName('handler')[0].style.left = 0 + 'px';
         document.getElementsByClassName('drag_bg')[0].style.width = 0 + 'px';
       }
-    }
+    },
   }
 }
 </script>
 
 <style >
+  .code{
+    margin-left:35px;
+    background: #fff;
+  }
 .f_bj {
   position: relative;
   height: 100%;

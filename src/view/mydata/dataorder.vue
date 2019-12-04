@@ -859,7 +859,7 @@ export default {
     padding-left: 20px;
   }
   .f_inpt {
-    width: calc(100% - 90%);
+    width: calc(100% - 87%);
   }
   .f_date {
     margin-left: 20px;

@@ -220,6 +220,13 @@ export default {
             })
             item.code = item.codes.join(',')
           })
+        }else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
         }
       }).catch((err) => {
         console.log('错误信息' + err)
@@ -230,6 +237,13 @@ export default {
         var { code, data } = res.data
         if (code === 1000) {
           this.Group = data
+        }else if (code == 2001) {
+          this.$message.error(res.data.message);
+          window.sessionStorage.clear();
+          window.localStorage.clear();
+          this.$router.push('/')
+        } else {
+          this.$message.error(res.data.message);
         }
       }).catch((err) => {
         console.log('错误信息' + err)
@@ -341,7 +355,6 @@ export default {
         name: this.GroupName,
         ids: this.ids.join(',')
       }
-      // console.log(this.ids)
       this.$http.post(`pc/group/addGroup`, info).then(res => {
         var { code, data } = res.data
         if (code === 1000) {

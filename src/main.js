@@ -18,6 +18,7 @@ import axios from './assets/js/uniteaxios'
 import Vuejsonp from 'vue-jsonp'
 import qs from 'qs'
 import md5 from 'js-md5';
+import SlideVerify from 'vue-monoplasty-slide-verify';
 Vue.prototype.$md5 = md5;
 Vue.config.productionTip = false
 Vue.use(BaiduMap, {
@@ -34,6 +35,7 @@ Vue.config.debug = true;
 Vue.use(Vuejsonp)
 Vue.use(ElementUI);
 Vue.use(axios)
+Vue.use(SlideVerify)
 /* eslint-disable no-new */
 new Vue({
   store:Store,

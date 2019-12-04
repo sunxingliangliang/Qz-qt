@@ -619,13 +619,6 @@ export default {
       })
     },
     ti () {
-      console.log(1)
-      // let info = new FormData()
-      // info.append('name', this.input1,)
-      // info.append('price', this.dgmoney,)
-      // info.append('remark', this.textarea2,)
-      // info.append('taskId', this.id,)
-      // info.append('deviceids',this.DeviceId.join(','))
       let info = {
         'name': this.input1,
         'price': this.dgmoney,

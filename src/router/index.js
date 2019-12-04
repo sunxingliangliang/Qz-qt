@@ -49,6 +49,9 @@ const Pickzd = () => import('@/view/zdboard/pickzd.vue')
 const Groupinggl = () => import('@/view/zdboard/groupinggl.vue')
 //下级代理商
 const Agent = () => import('@/view/xj/agent.vue')
+const Lowertasks = () => import('@/view/xj/lowertasks.vue')
+const Lowerend = () => import('@/view/xj/lowerend.vue')
+const AllLowerend = () => import('@/view/xj/allLowerend.vue')
 
 Vue.use(Router)
 
@@ -240,6 +243,18 @@ const router = new Router({
         {
           path: 'agent.vue',
           component: Agent
+        },
+        {
+          path: 'lowertasks.vue',
+          component: Lowertasks
+        },
+        {
+          path: 'lowerend.vue',
+          component: Lowerend
+        },
+        {
+          path: 'allLowerend.vue',
+          component: AllLowerend
         },
         // 基本信息
         {

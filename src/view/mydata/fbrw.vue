@@ -394,7 +394,7 @@ export default {
             url: `modules/signIndustry/listByParent?pid=1`,
             methods: 'get',
             params: {
-              pid: 1
+              // pid: 1
             }
           }
           if (level === 0) {
