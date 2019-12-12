@@ -45,7 +45,7 @@
       </el-card>
     </div>
     <div :class="$style.f_tb1">
-      <span :class="$style.f_cjbt">数据采集量</span>
+      <span :class="$style.f_cjbt">数据确权量</span>
       <el-row>
         <div :class="$style.f_rq">
           <span :class="{'f_xs':xs,'f_xs1':xs1}" @click="br">本日</span>
@@ -190,8 +190,17 @@ export default {
           this.zz2 = data.data.compare
           this.task  = data.task.count
           this.zz3 = data.task.compare
-          if(this.zz1 < 0){
+          if(this.zz <= 0){
+            this.zz = 0
+          }
+          if(this.zz1 <= 0){
             this.zz1 = 0
+          }
+          if(this.zz2 <= 0){
+            this.zz2 = 0
+          }
+          if(this.zz3 <= 0){
+            this.zz3 = 0
           }
         }else if(code==2001){
            this.$message.error(res.data.message);
@@ -438,7 +447,7 @@ export default {
                   normal: {
                     //每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                     color: function (params) {
-                      var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707', '#38579A']; //每根柱子的颜色
+                      var colorList = ['#9013FE', '#0079FE', '#FF8F00', '#41E0FC ', '#B8E986', '#8C99AD ', '#FB745B', '#53237E', '#F6D707','#38579A','#1786ba','#17ba99','#32ba17','#a9ba17','#ba9217','#ba2617']; //每根柱子的颜色
                       return colorList[params.dataIndex];
                     }
                   },

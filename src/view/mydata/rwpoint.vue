@@ -12,9 +12,9 @@
         <br>
         <p :class="$style.f_rwid">任务编号:</p>
         <span :class="$style.f_span">{{taskCode}}</span>
-        <p :class="$style.f_rwlangth">采集距离:</p>
+        <p :class="$style.f_rwlangth">辐射半径:</p>
         <span :class="$style.f_span">{{radius}}米</span>
-        <p :class="$style.f_rwlangth">采集数量:</p>
+        <p :class="$style.f_rwlangth">上传数量:</p>
         <span :class="$style.f_span">{{dataNum}}</span>
         <div :class="$style.f_img">
           <img :src="url" alt style="    max-width: 100%; display: inline-block; max-height: 100%;">
@@ -54,14 +54,14 @@
           <el-table-column prop="rewardreward" align="center" label="已获奖励(VKT)"></el-table-column>
         </el-table>
       </div>
-      <p :class="$style.f_jb">采集时段</p>
+      <p :class="$style.f_jb">上传时段</p>
       <div :class="$style.f_bgnr">
         <el-table :data="tableData3" border style="width: 100%;">
-          <el-table-column prop="date" align="center" label="采集日期"></el-table-column>
-          <el-table-column prop="time" align="center" label="采集时段"></el-table-column>
+          <el-table-column prop="date" align="center" label="上传日期"></el-table-column>
+          <el-table-column prop="time" align="center" label="上传时段"></el-table-column>
         </el-table>
       </div>
-      <p :class="$style.f_jb">采集场景</p>
+      <p :class="$style.f_jb">场景位置</p>
       <div :class="$style.f_bgnr">
         <el-table :data="tableData4" border style="width: 100%;">
           <el-table-column align="center" label="省市区" width="180">
@@ -103,7 +103,7 @@
       <!-- 终端配置 -->
       <p :class="$style.f_jb">终端配置</p>
       <el-row :class="$style.f_row">
-        <p :class="$style.f_rwmc">采集终端</p>
+        <p :class="$style.f_rwmc">终端设备</p>
         <el-cascader
           style="width:900px"
           :change-on-select="true"
@@ -127,7 +127,7 @@
           <el-table-column align="center" label="采集状态">
             <template slot-scope="scope">
               <span v-if="scope.row.isTime===1">采集中</span>
-              <span v-if="scope.row.isTime===2">未采集</span>
+              <span v-if="scope.row.isTime===2">未启动</span>
             </template>
           </el-table-column>
           <el-table-column prop="isNet" align="center" label="联网状态">

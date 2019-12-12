@@ -88,7 +88,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="deviceNum" align="center" label="终端数量" width="80"></el-table-column>
-            <el-table-column prop="dataNum" align="center" label="采集数据量" width="100"></el-table-column>
+            <el-table-column prop="dataNum" align="center" label="数据标签量" width="100"></el-table-column>
             <el-table-column prop="orderDataNum" align="center" label="数据订单" width="80"></el-table-column>
             <el-table-column prop="orderPersonaNum" align="center" label="数据画像" width="80"></el-table-column>
             <el-table-column prop="fixedNum" align="center" label="固定画像" width="80"></el-table-column>
@@ -112,7 +112,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="deviceNum" align="center" label="终端数量" width="80"></el-table-column>
-            <el-table-column prop="dataNum" align="center" label="采集数据量" width="100"></el-table-column>
+            <el-table-column prop="dataNum" align="center" label="数据标签量" width="100"></el-table-column>
             <el-table-column prop="orderDataNum" align="center" label="数据订单" width="80"></el-table-column>
             <el-table-column prop="orderPersonaNum" align="center" label="数据画像" width="80"></el-table-column>
             <el-table-column prop="fixedNum" align="center" label="固定画像" width="80"></el-table-column>
@@ -135,7 +135,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="deviceNum" align="center" label="终端数量" width="80"></el-table-column>
-            <el-table-column prop="dataNum" align="center" label="采集数据量" width="100"></el-table-column>
+            <el-table-column prop="dataNum" align="center" label="数据标签量" width="100"></el-table-column>
             <el-table-column prop="orderDataNum" align="center" label="数据订单" width="80"></el-table-column>
             <el-table-column prop="orderPersonaNum" align="center" label="数据画像" width="80"></el-table-column>
             <el-table-column prop="fixedNum" align="center" label="固定画像" width="80"></el-table-column>
@@ -158,7 +158,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="deviceNum" align="center" label="终端数量" width="80"></el-table-column>
-            <el-table-column prop="dataNum" align="center" label="采集数据量" width="100"></el-table-column>
+            <el-table-column prop="dataNum" align="center" label="数据标签量" width="100"></el-table-column>
             <el-table-column prop="orderDataNum" align="center" label="数据订单" width="80"></el-table-column>
             <el-table-column prop="orderPersonaNum" align="center" label="数据画像" width="80"></el-table-column>
             <el-table-column prop="fixedNum" align="center" label="固定画像" width="80"></el-table-column>
@@ -266,7 +266,9 @@ export default {
       yiban:'',
       proxyType:null,
       all1:null,
-      all3:null
+      all3:null,
+      rwname: '下级任务列表',
+      zdname: '下级终端设备',
     }
   },
   mounted () {
@@ -277,10 +279,11 @@ export default {
   },
   methods: {
     lowertasks(){
-      // this.$router.push('/index/lowerTasks.vue)
+      this.$store.commit('myval1', this.rwname)
       this.$router.push('/index/lowerTasks.vue')
     },
     lowerend(){
+      this.$store.commit('myval1', this.zdname)
       this.$router.push('/index/lowerend.vue')
     },
     getCount () {

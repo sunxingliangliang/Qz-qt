@@ -388,7 +388,7 @@ export default {
     this.qb()
   },
   methods:{
-    qb () {
+    qb (index,row) {
       this.xz1 = true
       this.xz = false
       this.xz2 = true

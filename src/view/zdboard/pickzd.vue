@@ -10,7 +10,7 @@
       </div>
       <div :class="$style.f_s6">
         <el-card shadow="always" :class="$style.f_kp">
-          <p :class="$style.f_p">采集中</p>
+          <p :class="$style.f_p">工作中</p>
           <p :class="$style.f_num4">{{num4}}</p>
           <el-progress :percentage="num6" class="f_jd4" :format="format"></el-progress>
         </el-card>
@@ -28,8 +28,8 @@
       <p>终端列表</p>
       <div :class="$style.f_row">
         <div :span="1" :class="{'f_fy':xz,'f_fy1':xz1}" @click="qb">全部</div>
-        <div :span="1" :class="{'f_fy':xz2,'f_fy1':xz3}" @click="ywc">采集中</div>
-        <div :span="1" :class="{'f_fy':xz4,'f_fy1':xz5}" @click="wwc">待采集</div>
+        <div :span="1" :class="{'f_fy':xz2,'f_fy1':xz3}" @click="ywc">工作中</div>
+        <div :span="1" :class="{'f_fy':xz4,'f_fy1':xz5}" @click="wwc">待机中</div>
         <div :span="1" :class="{'f_fy':xz6,'f_fy1':xz7}" @click="zzrw">已联网</div>
         <div
           :span="1"
@@ -61,10 +61,10 @@
                 <span v-if="scope.row.groupName===''">未分组</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" sortable label="采集状态">
+            <el-table-column align="center" sortable label="工作状态">
               <template slot-scope="scope">
-                <span v-if="scope.row.status===1">采集中</span>
-                <span v-if="scope.row.status===2">未采集</span>
+                <span v-if="scope.row.status===1">上传中</span>
+                <span v-if="scope.row.status===2">未启动</span>
               </template>
             </el-table-column>
             <el-table-column prop="isNet" align="center" sortable label="联网状态">
@@ -105,7 +105,7 @@
           </el-table>
         </div>
       </div>
-      <!-- 采集中 -->
+      <!-- 上传中 -->
       <div v-show="xz3===true">
         <div :class="$style.f_bgnr">
           <el-table
@@ -126,10 +126,10 @@
                 <span v-if="scope.row.groupName===''">未分组</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" sortable label="采集状态">
+            <el-table-column align="center" sortable label="工作状态">
               <template slot-scope="scope">
-                <span v-if="scope.row.status===1">采集中</span>
-                <span v-if="scope.row.status===2">未采集</span>
+                <span v-if="scope.row.status===1">上传中</span>
+                <span v-if="scope.row.status===2">未启动</span>
               </template>
             </el-table-column>
             <el-table-column prop="isNet" align="center" sortable label="联网状态">
@@ -191,10 +191,10 @@
                 <span v-if="scope.row.groupName===''">未分组</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" sortable label="采集状态">
+            <el-table-column align="center" sortable label="工作状态">
               <template slot-scope="scope">
-                <span v-if="scope.row.status===1">采集中</span>
-                <span v-if="scope.row.status===2">未采集</span>
+                <span v-if="scope.row.status===1">上传中</span>
+                <span v-if="scope.row.status===2">未启动</span>
               </template>
             </el-table-column>
             <el-table-column prop="isNet" align="center" sortable label="联网状态">
@@ -256,10 +256,10 @@
                 <span v-if="scope.row.groupName===''">未分组</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" sortable label="采集状态">
+            <el-table-column align="center" sortable label="工作状态">
               <template slot-scope="scope">
-                <span v-if="scope.row.status===1">采集中</span>
-                <span v-if="scope.row.status===2">未采集</span>
+                <span v-if="scope.row.status===1">上传中</span>
+                <span v-if="scope.row.status===2">未启动</span>
               </template>
             </el-table-column>
             <el-table-column prop="isNet" align="center" sortable label="联网状态">
@@ -584,7 +584,7 @@ export default {
         console.log('错误信息' + err)
       })
     },
-    // 采集中
+    // 上传中
     ywc () {
       this.xz1 = false
       this.xz = true

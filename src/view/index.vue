@@ -107,7 +107,7 @@ export default {
       data: [
         { name: '首页', path: '/index/indexx.vue', id: '0' },
         {          name: '我的数据', id: '1', child: [
-            { name: '采集任务', path: '/index/pick.vue', id: '2' },
+            { name: '数据任务', path: '/index/pick.vue', id: '2' },
             { name: '数据订单', path: '/index/dataorder.vue', id: '3' },
             { name: '数据画像', path: '/index/dataikon.vue', id: '4' },
             { name: '固定画像', path: '/index/fiexikon.vue', id: '5' },
@@ -118,7 +118,7 @@ export default {
             // { name: '任务广场', path: '/index/taskmarket.vue', id: '9' },
           ]        },
         {          name: '终端管理', id: '10', child: [
-            { name: '采集终端', path: '/index/pickzd.vue', id: '11' },
+            { name: '终端设备', path: '/index/pickzd.vue', id: '11' },
             { name: '分组终端', path: '/index/groupinggl.vue', id: '12' },
           ]        }
       ],

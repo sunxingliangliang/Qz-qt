@@ -14,7 +14,7 @@
           <el-table-column type="index" align="center" label="序号" width="50"></el-table-column>
           <el-table-column prop="name" align="center" label="分组" width="100"></el-table-column>
           <el-table-column prop="num" align="center" sortable label="数量" width="100"></el-table-column>
-          <el-table-column prop="code" align="center" sortable label="采集终端"></el-table-column>
+          <el-table-column prop="code" align="center" sortable label="终端设备"></el-table-column>
           <el-table-column prop="status" align="center" label="操作" width="100">
             <template slot-scope="scope">
               <span
@@ -69,7 +69,7 @@
               style="width: 30%;margin-top:20px;display: inline-block;margin-left:20px;"
               @selection-change="handleSelectionChange"
             >
-              <el-table-column prop="code" align="center" label="采集终端" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="code" align="center" label="终端设备" show-overflow-tooltip></el-table-column>
               <el-table-column type="selection" align="center" label="操作"></el-table-column>
             </el-table>
             <el-table
@@ -79,7 +79,7 @@
               style="width: 30%;margin-top:20px;display: inline-block;margin-left:15px;"
               @selection-change="handleSelectionChange2"
             >
-              <el-table-column prop="code" align="center" label="采集终端" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="code" align="center" label="终端设备" show-overflow-tooltip></el-table-column>
               <el-table-column type="selection" align="center" label="操作"></el-table-column>
             </el-table>
             <el-table
@@ -89,7 +89,7 @@
               style="width: 30%;margin-top:20px;display: inline-block;margin-left:15px;"
               @selection-change="handleSelectionChange3"
             >
-              <el-table-column prop="code" align="center" label="采集终端" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="code" align="center" label="终端设备" show-overflow-tooltip></el-table-column>
               <el-table-column type="selection" align="center" label="操作"></el-table-column>
             </el-table>
           </div>
@@ -128,7 +128,7 @@
               style="width: 30%;margin-top:20px;display: inline-block;margin-left:20px;"
               @selection-change="handleSelectionChange4"
             >
-              <el-table-column prop="code" label="采集终端" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="code" label="终端设备" show-overflow-tooltip></el-table-column>
               <el-table-column type="selection" align="center"></el-table-column>
             </el-table>
             <!-- <el-table
@@ -139,7 +139,7 @@
               style="width: 30%;margin-top:20px;display: inline-block;margin-left:15px;"
               @selection-change="handleSelectionChange5"
             >
-              <el-table-column prop="code" align="center" label="采集终端" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="code" align="center" label="终端设备" show-overflow-tooltip></el-table-column>
               <el-table-column type="selection" align="center" label="操作"></el-table-column>
             </el-table>
             <el-table
@@ -150,7 +150,7 @@
               style="width: 30%;margin-top:20px;display: inline-block;margin-left:15px;"
               @selection-change="handleSelectionChange6"
             >
-              <el-table-column prop="code" align="center" label="采集终端" show-overflow-tooltip></el-table-column>
+              <el-table-column prop="code" align="center" label="终端设备" show-overflow-tooltip></el-table-column>
               <el-table-column type="selection" align="center" label="操作"></el-table-column>
             </el-table> -->
           </div>

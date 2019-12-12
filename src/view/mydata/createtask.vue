@@ -8,7 +8,7 @@
         <el-input placeholder="请输入内容" v-model="missionname" :class="$style.f_inpt" clearable 
           style="width: calc(47%); margin-top:20px;"
         ></el-input>
-        <p :class="$style.f_rwmc" style="padding-left:2.5%;">采集距离</p>
+        <p :class="$style.f_rwmc" style="padding-left:2.5%;">辐射半径</p>
         <el-select v-model="distance" clearable placeholder="请选择" style="margin-right:115px;margin-left:10px; width: calc(18.2%);">
           <el-option
             v-for="item in collection"
@@ -27,9 +27,9 @@
             ></el-option>
           </el-select>
       </el-row>
-      <p :class="$style.f_jb">采集场景</p>
+      <p :class="$style.f_jb">场景位置</p>
       <el-row :class="$style.f_row">
-        <p :class="$style.f_rwmc">采集地点</p>
+        <p :class="$style.f_rwmc">上传地点</p>
         <el-cascader
           :change-on-select="true"
           :options="collectionlocation"
@@ -148,7 +148,7 @@
       <!-- 表格 -->
       <div :class="$style.f_bgnr">
         <el-table :data="tableData" border style="width: 100%;">
-          <el-table-column prop="name" align="center" label="采集地区" width="180"></el-table-column>
+          <el-table-column prop="name" align="center" label="上传地区" width="180"></el-table-column>
           <el-table-column prop="data" align="center" label="数据类型" width="180"></el-table-column>
           <el-table-column prop="regionalcategory" align="center" label="行业/区域"></el-table-column>
           <el-table-column prop="regionalsubcategory" align="center" label="场景"></el-table-column>
@@ -168,10 +168,10 @@
           </el-table-column>
         </el-table>
       </div>
-      <p :class="$style.f_jb" v-if="areatype!=null">采集时间</p>
+      <p :class="$style.f_jb" v-if="areatype!=null">上传时间</p>
       <el-row :class="$style.f_row">
         <div v-if="areatype===1">
-          <p :class="$style.f_rwmc">采集日期</p>
+          <p :class="$style.f_rwmc">上传日期</p>
           <!-- <el-date-picker
             v-model="valuetime"
             type="daterange"
@@ -189,7 +189,7 @@
             value-format="yyyy-MM-dd"
             :class="$style.f_inpt"
           ></el-date-picker>
-          <p :class="$style.f_rwmc">采集时段</p>
+          <p :class="$style.f_rwmc">上传时段</p>
           <el-time-select
             placeholder="起始时间"
             v-model="startTime"
@@ -211,7 +211,7 @@
           ></el-time-select>
         </div>
         <div v-if="areatype===2">
-          <p :class="$style.f_rwmc">采集日期</p>
+          <p :class="$style.f_rwmc">上传日期</p>
           <el-date-picker
             disabled
             v-model="tradedate"
@@ -222,7 +222,7 @@
             value-format="yyyy-MM-dd"
             :class="$style.f_inpt"
           ></el-date-picker>
-          <p :class="$style.f_rwmc">采集时段</p>
+          <p :class="$style.f_rwmc">上传时段</p>
           <el-time-select
             disabled
             placeholder="起始时间"
@@ -249,7 +249,7 @@
       <!-- 终端配置 -->
       <p :class="$style.f_jb">终端配置</p>
       <el-row :class="$style.f_row">
-        <p :class="$style.f_rwmc">采集终端</p>
+        <p :class="$style.f_rwmc">终端设备</p>
         <el-cascader
           style="width:900px;margin-left:11px;"
           :options="ending"

@@ -99,9 +99,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="name" align="center" label="任务名称" width="180"></el-table-column>
-          <el-table-column prop="date" align="center" sortable label="采集日期"></el-table-column>
-          <el-table-column prop="time" align="center" sortable label="采集时间" width="105"></el-table-column>
-          <el-table-column prop="data_num" align="center" label="已采数据" width="90">
+          <el-table-column prop="date" align="center" sortable label="构建日期"></el-table-column>
+          <el-table-column prop="time" align="center" sortable label="构建时间" width="105"></el-table-column>
+          <el-table-column prop="data_num" align="center" label="标签数量" width="90">
             <template slot-scope="scope">
               <span
                 @click="addresslist(scope.$index, scope.row)"
@@ -161,7 +161,7 @@
                 v-if="scope.row.status===0"
                 style="font-size: 14px; letter-spacing: 0; text-align: center;"
               >
-                <i class="jinxing"></i>待采集
+                <i class="jinxing"></i>待上传
               </span>
               <span
                 v-if="scope.row.status===1"
@@ -213,9 +213,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="name" align="center" label="任务名称" width="180"></el-table-column>
-          <el-table-column prop="date" align="center" sortable label="采集日期"></el-table-column>
-          <el-table-column prop="time" align="center" sortable label="采集时间" width="105"></el-table-column>
-          <el-table-column prop="data_num" align="center" label="已采数据" width="90">
+          <el-table-column prop="date" align="center" sortable label="构建日期"></el-table-column>
+          <el-table-column prop="time" align="center" sortable label="构建时间" width="105"></el-table-column>
+          <el-table-column prop="data_num" align="center" label="标签数量" width="90">
             <template slot-scope="scope">
               <span
                 @click="addresslist(scope.$index, scope.row)"
@@ -275,7 +275,7 @@
                 v-if="scope.row.status===0"
                 style="font-size: 14px; letter-spacing: 0; text-align: center;"
               >
-                <i class="jinxing"></i>待采集
+                <i class="jinxing"></i>待上传
               </span>
               <span
                 v-if="scope.row.status===1"
@@ -324,9 +324,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="name" align="center" label="任务名称" width="180"></el-table-column>
-          <el-table-column prop="date" align="center" sortable label="采集日期"></el-table-column>
-          <el-table-column prop="time" align="center" sortable label="采集时间" width="105"></el-table-column>
-          <el-table-column prop="data_num" align="center" label="已采数据" width="90">
+          <el-table-column prop="date" align="center" sortable label="构建日期"></el-table-column>
+          <el-table-column prop="time" align="center" sortable label="构建时间" width="105"></el-table-column>
+          <el-table-column prop="data_num" align="center" label="标签数量" width="90">
             <template slot-scope="scope">
               <span
                 @click="addresslist(scope.$index, scope.row)"
@@ -386,7 +386,7 @@
                 v-if="scope.row.status===0"
                 style="font-size: 14px; letter-spacing: 0; text-align: center;"
               >
-                <i class="jinxing"></i>待采集
+                <i class="jinxing"></i>待上传
               </span>
               <span
                 v-if="scope.row.status===1"
@@ -435,9 +435,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="name" align="center" label="任务名称" width="180"></el-table-column>
-          <el-table-column prop="date" align="center" sortable label="采集日期"></el-table-column>
-          <el-table-column prop="time" align="center" sortable label="采集时间" width="105"></el-table-column>
-          <el-table-column prop="data_num" align="center" label="已采数据" width="90">
+          <el-table-column prop="date" align="center" sortable label="构建日期"></el-table-column>
+          <el-table-column prop="time" align="center" sortable label="构建时间" width="105"></el-table-column>
+          <el-table-column prop="data_num" align="center" label="标签数量" width="90">
             <template slot-scope="scope">
               <span
                 @click="addresslist(scope.$index, scope.row)"
@@ -497,7 +497,7 @@
                 v-if="scope.row.status===0"
                 style="font-size: 14px; letter-spacing: 0; text-align: center;"
               >
-                <i class="jinxing"></i>待采集
+                <i class="jinxing"></i>待上传
               </span>
               <span
                 v-if="scope.row.status===1"
@@ -546,9 +546,9 @@
             </template>
           </el-table-column>
           <el-table-column prop="name" align="center" label="任务名称" width="180"></el-table-column>
-          <el-table-column prop="date" align="center" sortable label="采集日期"></el-table-column>
-          <el-table-column prop="time" align="center" sortable label="采集时间" width="105"></el-table-column>
-          <el-table-column prop="data_num" align="center" label="已采数据" width="90">
+          <el-table-column prop="date" align="center" sortable label="构建日期"></el-table-column>
+          <el-table-column prop="time" align="center" sortable label="构建时间" width="105"></el-table-column>
+          <el-table-column prop="data_num" align="center" label="标签数量" width="90">
             <template slot-scope="scope">
               <span
                 @click="addresslist(scope.$index, scope.row)"
@@ -608,7 +608,7 @@
                 v-if="scope.row.status===0"
                 style="font-size: 14px; letter-spacing: 0; text-align: center;"
               >
-                <i class="jinxing"></i>待采集
+                <i class="jinxing"></i>待上传
               </span>
               <span
                 v-if="scope.row.status===1"
@@ -664,7 +664,7 @@
             style="width:26%"
             @change="scenes"
             clearable
-            placeholder="请选择采集场景"
+            placeholder="请选择场景位置"
           >
             <el-option
               v-for="item in acquisitionscene"
@@ -699,7 +699,7 @@
             <el-table :data="tableDataaspect" border style="width: 100%">
               <el-table-column type="index" align="center" label="序号" width="50"></el-table-column>
               <el-table-column prop="mac" align="center" label="数据" width="150"></el-table-column>
-              <el-table-column prop="gather_time" align="center" label="采集时间"></el-table-column>
+              <el-table-column prop="gather_time" align="center" label="构建时间"></el-table-column>
               <el-table-column align="center" label="经纬度">
                 <template slot-scope="scope">
                   <span>{{scope.row.lat}}/{{scope.row.lng}}</span>
@@ -1184,7 +1184,7 @@ export default {
         console.log(1)
       } else {
         this.tableData1 = row.collectList
-        console.log(this.tableData1)
+        console.log('aaaa',this.tableData1)
       }
     },
     // 已完成任务
